@@ -1,36 +1,59 @@
 package highchair.tests
 
+import highchair.meta.FilterOps._
 import org.specs._
-import com.google.appengine.api.datastore._
-import com.google.appengine.tools.development.testing._
 
-class EntitySpec extends Specification {
+class EntitySpec extends highchair.specs.DataStoreSpec {
   
-  val helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig)
+  val people = List(
+    Person("Erin", Some("Pate"), "Lewis", 31, new java.util.Date, Nil),
+    Person("Chris", Some("Aaron"), "Lewis", 29, new java.util.Date, Nil),
+    Person("Garrett", Some("Donald"), "Lewis", 60, new java.util.Date, List("Pop"))
+  )
   
-  doBeforeSpec { helper.setUp }
-  doAfterSpec { helper.tearDown }
+  doBeforeSpec {
+    super.doBeforeSpec()
+    people foreach Person.put
+  }
   
-  implicit val ds = DatastoreServiceFactory.getDatastoreService
-  val p = new Person("Chris", Some("Aaron"), "Lewis", 29, new java.util.Date, List("bill", "andy"))
-  
-  "a person" should {
-    "have a mapped firstName" in {
-      Person.firstName.name must_== "firstName"
-      Person.put(p)
+  "People queries" should {
+    
+    "find 3 Lewises" in {
+      Person.find {
+        Person.lastName === "Lewis"
+      }.size must_== 3
     }
-
-    "be findable" in {
-      import highchair.meta.FilterOps._
-      val people = Person.find (
-        Person.firstName === "Chris",
-        Person.middleName === Some("Aaron"),
+    
+    "find 1 Lewis with middleName Aaron" in {
+      Person.find {
+        Person.lastName === "Lewis"
+        Person.middleName === Some("Aaron")
+      }.size must_== 1
+    }
+    
+    "find 0 Lewises under age 20" in {
+      Person.find(
         Person.lastName === "Lewis",
-        Person.age <= 29
-      )
-      people.size must_== 1
-      people.head.aliases must_== List("bill", "andy")
+        Person.age < 20
+      ) must beEmpty
     }
+    
+    "find 1 Lewis over age 40" in {
+      val pop = Person.find(
+        Person.lastName === "Lewis",
+        Person.age > 40
+      )
+      
+      pop.size must_== 1
+      pop.head.middleName must_== Some("Donald")
+    }
+    
+    "find 0 Joneses" in {
+      Person.find {
+        Person.lastName === "Jones"
+      } must beEmpty
+    }
+    
   }
   
 }
