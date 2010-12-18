@@ -21,16 +21,3 @@ object Person extends Kind[Person] {
   val aliases = property[List[String]]("aliases")
   val * = firstName ~ middleName ~ lastName ~ age ~ birthday ~ aliases
 }
-
-case class Dog(
-  val name: String,
-  val age: Int,
-  val birthday: Date
-)
-
-object Dog extends Kind[Dog] {
-  val name = property[String]("name")
-  val age = property[Int]("age")
-  val birthday = property[Date]("birthday")
-  val * = name ~ age ~ birthday
-}
