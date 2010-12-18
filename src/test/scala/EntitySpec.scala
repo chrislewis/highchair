@@ -12,7 +12,7 @@ class EntitySpec extends Specification {
   doAfterSpec { helper.tearDown }
   
   implicit val ds = DatastoreServiceFactory.getDatastoreService
-  val p = new Person("Chris", Some("Aaron"), "Lewis", 29, new java.util.Date)
+  val p = new Person("Chris", Some("Aaron"), "Lewis", 29, new java.util.Date, List("bill", "andy"))
   
   "a person" should {
     "have a mapped firstName" in {
@@ -25,9 +25,11 @@ class EntitySpec extends Specification {
       val people = Person.find (
         Person.firstName === "Chris",
         Person.middleName === Some("Aaron"),
-        Person.lastName === "Lewis"
+        Person.lastName === "Lewis",
+        Person.age <= 29
       )
       people.size must_== 1
+      people.head.aliases must_== List("bill", "andy")
     }
   }
   

@@ -3,29 +3,29 @@ package highchair.meta
 import com.google.appengine.api.datastore.Query
 import Query.{FilterOperator => FO, SortDirection => SD}
 
-sealed trait Filter {
+sealed trait Filter[E, A] {
   def bind(q: Query): Query
 }
 
-sealed abstract class SortDirection[A](val p: PropertyMapping[A], val direction: SD) extends Filter {
+sealed abstract class SortDirection[E, A](val p: PropertyMapping[E, A], val direction: SD) extends Filter[E, A] {
   def bind(q: Query) = q.addSort(p.name, direction)
 }
 
-sealed case class Asc[A](val property: PropertyMapping[A]) extends SortDirection(property, SD.ASCENDING)
-sealed case class Desc[A](val property: PropertyMapping[A]) extends SortDirection(property, SD.DESCENDING)
+sealed case class Asc[E, A](val property: PropertyMapping[E, A]) extends SortDirection(property, SD.ASCENDING)
+sealed case class Desc[E, A](val property: PropertyMapping[E, A]) extends SortDirection(property, SD.DESCENDING)
 
-sealed class PropertyFilter[A <: AnyRef](val property: PropertyMapping[A]) {
+sealed class PropertyFilter[E, A](val property: PropertyMapping[E, A]) {
   
-  def single(filter: FO, value: A) = new Filter {
+  def single(filter: FO, value: A) = new Filter[E, A] {
     def bind(q: Query) = {
       q.addFilter(property.name, filter, property.prop.translate(value))
     }
   }
-  def multi(filter: FO, value: A*) = new Filter {
+  def multi(filter: FO, value: A*) = new Filter[E, A] {
     def bind(q: Query) = {
       val list = new java.util.ArrayList[Any]
       value.foreach { list.add(_) }
-      q.addFilter(property.name, FO.IN, list)
+      q.addFilter(property.name, filter, list)
     }
   }
   def ===(value: A) = single(FO.EQUAL, value)
@@ -38,5 +38,5 @@ sealed class PropertyFilter[A <: AnyRef](val property: PropertyMapping[A]) {
 }
 
 object FilterOps {
-  implicit def Prop2Filter[A <: AnyRef](property: PropertyMapping[A]) = new PropertyFilter(property)
+  implicit def Prop2Filter[E, A](property: PropertyMapping[E, A]) = new PropertyFilter(property)
 }
