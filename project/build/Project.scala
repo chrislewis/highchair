@@ -5,6 +5,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) {
   val gae_version = "1.3.7"
   val specs_version = "1.6.6"
   
+  /* Minimal GAE artifacts (via AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
     val gaeSdk = "com.google.appengine" % "appengine-api-1.0-sdk" % gae_version % "provided"
     val gaeStubs = "com.google.appengine" % "appengine-api-stubs" % gae_version % "provided"
@@ -16,12 +17,15 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) {
   
   val specsDep = "org.scala-tools.testing" %% "specs" % specs_version
   
-  lazy val spec = project("spec", "GAE Datastore Spec", new HighchairModule(_) {
+  lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
     lazy val specs = specsDep
   })
-  lazy val datastore = project("datastore", "GAE Datastore Library", new HighchairModule(_) {
+  lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
     lazy val specs = specsDep % "test"
   }, spec)
+  lazy val geocell = project("geocell", "Highchair Geocell", new DefaultProject(_) {
+    lazy val specs = specsDep % "test"
+  })
   
   /* Additional repos. */
   val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
