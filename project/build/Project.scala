@@ -10,5 +10,5 @@ class Project(info: ProjectInfo) extends DefaultProject(info) {
   
   val specs = "org.scala-tools.testing" %% "specs" % "1.6.5" % "test"
   
-  val appengineRepo = "nexus" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
+  val appengineRepo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
 }
