@@ -74,9 +74,9 @@ class PropertyMapping[E, A : Prop](val name: String, val clazz: Class[_]) {
 class Mapping[E](val mappings: Map[String, PropertyMapping[E, _]]) {
   def this(pm: PropertyMapping[E, _]) = this(collection.immutable.ListMap(pm.name -> pm))
   
-  def ~(pm: PropertyMapping[E, _]) = new Mapping(mappings + (pm.name ->pm))
+  def ~(pm: PropertyMapping[E, _]) = new Mapping(mappings + (pm.name -> pm))
   
-  lazy val clazz = mappings.map {
+  lazy val clazz: Iterable[Class[_]] = mappings.map {
     case (name, pm) => pm.clazz
   }
 }

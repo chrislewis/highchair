@@ -2,6 +2,7 @@ package highchair.tests
 
 import highchair._
 import java.util.Date
+import com.google.appengine.api.datastore.Key
 
 case class Person(
   val firstName: String,
@@ -10,7 +11,7 @@ case class Person(
   val age: Int,
   val birthday: Date,
   val aliases: List[String]
-)
+) extends Entity[Person]
 
 object Person extends Kind[Person] {
   val firstName = property[String]("firstName")
