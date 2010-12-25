@@ -35,7 +35,7 @@ class FloatProp extends PropertyBase(0f)
 class DoubleProp extends PropertyBase(0d)
 class StringProp extends PropertyBase("")
 class DateProp extends PropertyBase(new java.util.Date)
-class KeyProp extends PropertyBase[Key](null)
+class KeyProp extends PropertyBase[Key](error("No suitable default value!"))
 
 class OptionalProp[A](val wrapped: Prop[A]) extends PropertyBase[Option[A]](None) {
   override def translate(value: Option[A]) = value.getOrElse(null)
