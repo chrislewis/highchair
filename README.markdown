@@ -40,7 +40,7 @@ A quick example:
      */
     val persistent_chris = Person.put(transient_chris)
     
-    /* Update and put the updated entity. */
-    val older_chris = Person.put(transient_chris.copy(age = 30))
+    /* Update and put the persistent entity. */
+    val older_chris = Person.put(persistent_chris.copy(age = 30))
 
 See the [specs](http://github.com/chrislewis/highchair/tree/master/datastore/src/test/scala) for more examples.
