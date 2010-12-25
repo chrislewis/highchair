@@ -6,9 +6,9 @@ import org.specs._
 class EntitySpec extends highchair.specs.DataStoreSpec {
   
   val people = List(
-    Person("Erin", Some("Pate"), "Lewis", 31, new java.util.Date, Nil),
-    Person("Chris", Some("Aaron"), "Lewis", 29, new java.util.Date, Nil),
-    Person("Garrett", Some("Donald"), "Lewis", 60, new java.util.Date, List("Pop"))
+    Person(None, "Erin", Some("Pate"), "Lewis", 31, new java.util.Date, Nil),
+    Person(None, "Chris", Some("Aaron"), "Lewis", 29, new java.util.Date, Nil),
+    Person(None, "Garrett", Some("Donald"), "Lewis", 60, new java.util.Date, List("Pop"))
   )
   
   doBeforeSpec {

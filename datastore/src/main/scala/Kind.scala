@@ -8,6 +8,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   
   /* Must be lazy! */
   lazy val reflector = new highchair.poso.Reflector[E]
+  lazy val c = findConstructor
   
   def * : Mapping[E]
   
@@ -25,21 +26,13 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     val key = dss.put(*.mappings.foldLeft(entity) {
       case (_e, pm) => putProp(pm._2, e, _e) 
     })
-    e.persistent(key)
+    
+    entity2Object(entity)
   }
   
   def find(params: Filter[E, _]*)(implicit dss: DatastoreService) = {
     val q = bindParams(params:_*)
-    collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
-  }
-  
-  def entity2Object(e: GEntity) = {
-    val ctor = reflector.constructorFor(*.clazz).get
-    val args = (*.mappings map {
-      case(name, pm) => pm.prop.get(e, name)
-    }).asInstanceOf[Seq[java.lang.Object]]
-    val ee = ctor.newInstance(args:_*).asInstanceOf[E]
-    ee.persistent(e.getKey)
+    collection.JavaConversions.asScalaIterable(dss.prepare(q).asIterable) map entity2Object
   }
   
   def delete(key: Key)(implicit dss: DatastoreService) {
@@ -58,6 +51,29 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     params.foldLeft(new Query(reflector.simpleName)) {
       (q, f) => f bind q
     }
+  
+  private def findConstructor = 
+    reflector.findConstructor { c =>
+      val p_types = c.getParameterTypes.toList
+      val g_types = c.getGenericParameterTypes.toList
+      p_types.containsSlice(*.clazz) &&
+      findKey(p_types.zip(g_types)).isDefined
+    } getOrElse error("NO CTOR")
+  
+  private def findKey(types: Seq[(Class[_], java.lang.reflect.Type)]) = 
+    types.find {
+      case(c, t) =>
+        c == classOf[Option[_]] &&
+        t.isInstanceOf[java.lang.reflect.ParameterizedType] &&
+        t.asInstanceOf[java.lang.reflect.ParameterizedType].getActualTypeArguments.head == classOf[Key]
+    }
+  
+  def entity2Object(e: GEntity) = {
+    val args = Some(e.getKey) :: (*.mappings map {
+      case(name, pm) => pm.prop.get(e, name)
+    }).toList.asInstanceOf[List[java.lang.Object]]
+    c.newInstance(args:_*).asInstanceOf[E]
+  }
   
   /* Set of implicits yielding properties for our mapped primitives. */
   implicit object boolProp extends BooleanProp

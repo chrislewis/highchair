@@ -55,7 +55,7 @@ class ListProp[A](val wrapped: Prop[A]) extends PropertyBase[List[A]](Nil) {
   import java.util.Collections
   override def translate(value: List[A]) = value match {
     case Nil => Collections.emptyList
-    case xs => scala.collection.JavaConversions.asList(xs)
+    case xs => scala.collection.JavaConversions.asJavaList(xs)
   }
   
   override def get(e: Entity, name: String) = e.getProperty(name) match {
@@ -76,8 +76,8 @@ class Mapping[E](val mappings: Map[String, PropertyMapping[E, _]]) {
   
   def ~(pm: PropertyMapping[E, _]) = new Mapping(mappings + (pm.name -> pm))
   
-  lazy val clazz: Iterable[Class[_]] = mappings.map {
+  lazy val clazz: Seq[Class[_]] = mappings.map {
     case (name, pm) => pm.clazz
-  }
+  }.toList
 }
 

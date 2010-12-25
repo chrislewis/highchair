@@ -5,6 +5,7 @@ import java.util.Date
 import com.google.appengine.api.datastore.Key
 
 case class Person(
+  val key: Option[Key],
   val firstName: String,
   val middleName: Option[String],
   val lastName: String,
