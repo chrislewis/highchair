@@ -1,3 +1,14 @@
+# Highchair
+
+Highchair is an experimental scala library for persisting objects to the Google Datastore.
+
+## Goals
+
+* Simplicity
+* Type-safety
+* Immutability
+
+A quick example:
 
     import highchair._
     import highchair.meta.FilterOps._
@@ -31,3 +42,5 @@
     
     /* Update and put the updated entity. */
     val older_chris = Person.put(transient_chris.copy(age = 30))
+
+See the [specs](http://github.com/chrislewis/highchair/tree/master/datastore/src/test/scala) for more examples.
