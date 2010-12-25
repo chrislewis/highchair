@@ -3,7 +3,7 @@ package highchair.tests
 import highchair.meta.FilterOps._
 import org.specs._
 
-class AncestorSpec extends highchair.specs.DataStoreSpec {
+class RelationSpec extends highchair.specs.DataStoreSpec {
   
   val no_friends = User(None, "Chris", Nil)
   
