@@ -23,3 +23,16 @@ object Person extends Kind[Person] {
   val aliases = property[List[String]]("aliases")
   val * = firstName ~ middleName ~ lastName ~ age ~ birthday ~ aliases
 }
+
+
+case class User(
+  val key: Option[Key],
+  val firstName: String,
+  val friends: List[Key]
+) extends Entity[User]
+
+object User extends Kind[User] {
+  val firstName = property[String]("firstName")
+  val friends = property[List[Key]]("friends")
+  val * = firstName ~ friends
+}

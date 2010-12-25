@@ -58,7 +58,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
       val g_types = c.getGenericParameterTypes.toList
       p_types.containsSlice(*.clazz) &&
       findKey(p_types.zip(g_types)).isDefined
-    } getOrElse error("NO CTOR")
+    } getOrElse error("No suitable constructor could be found!")
   
   private def findKey(types: Seq[(Class[_], java.lang.reflect.Type)]) = 
     types.find {
@@ -83,6 +83,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   implicit object doubleProp extends DoubleProp
   implicit object stringProp extends StringProp
   implicit object dateProp extends DateProp
+  implicit object keyProp extends KeyProp
   
   implicit def type2option[A](implicit prop: Prop[A]): OptionalProp[A] =
     new OptionalProp(prop)

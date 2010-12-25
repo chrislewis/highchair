@@ -1,6 +1,6 @@
 package highchair.meta
 
-import com.google.appengine.api.datastore.Entity
+import com.google.appengine.api.datastore.{Entity, Key}
 
 /* A mapping from a Datastore type to a scala type, with methods to get from/set on an Entity. */
 sealed trait Prop[A] {
@@ -8,9 +8,7 @@ sealed trait Prop[A] {
   def translate(value: A): Any = value
   def get(e: Entity, name: String) = e.getProperty(name) match {
     case null => dflt
-    case raw => {
-      raw.asInstanceOf[A]
-    }
+    case raw => raw.asInstanceOf[A]
   }
   def set(e: Entity, name: String, value: A) = {
     e.setProperty(name, translate(value))
@@ -37,6 +35,7 @@ class FloatProp extends PropertyBase(0f)
 class DoubleProp extends PropertyBase(0d)
 class StringProp extends PropertyBase("")
 class DateProp extends PropertyBase(new java.util.Date)
+class KeyProp extends PropertyBase[Key](null)
 
 class OptionalProp[A](val wrapped: Prop[A]) extends PropertyBase[Option[A]](None) {
   override def translate(value: Option[A]) = value.getOrElse(null)
