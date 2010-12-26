@@ -4,8 +4,8 @@ Highchair is an experimental scala library for persisting objects to the Google 
 
 ## Goals
 
-* Simplicity
 * Type-safety
+* Simplicity
 * Immutability
 
 A quick example:
@@ -23,10 +23,10 @@ A quick example:
     ) extends Entity[Person]
     
     object Person extends Kind[Person] {
-      val firstName = property[String]("firstName")
-      val middleName = property[Option[String]]("middleName")
-      val lastName = property[String]("lastName")
-      val age = property[Int]("age")
+      val firstName   = property[String]("firstName")
+      val middleName  = property[Option[String]]("middleName")
+      val lastName    = property[String]("lastName")
+      val age         = property[Int]("age")
       val * = firstName ~ middleName ~ lastName ~ age
     }
     
