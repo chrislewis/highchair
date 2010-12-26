@@ -28,11 +28,26 @@ object Person extends Kind[Person] {
 case class User(
   val key: Option[Key],
   val firstName: String,
+  val contactInfo: Option[Key],
   val friends: List[Key]
 ) extends Entity[User]
 
 object User extends Kind[User] {
   val firstName = property[String]("firstName")
+  val contactInfo = property[Option[Key]]("contactInfo")
   val friends = property[List[Key]]("friends")
-  val * = firstName ~ friends
+  val * = firstName ~ contactInfo ~ friends
+}
+
+
+case class ContactInfo(
+  val key: Option[Key],
+  val email: String,
+  val mobile: String
+) extends Entity[ContactInfo]
+
+object ContactInfo extends Kind[ContactInfo] {
+  val email = property[String]("email")
+  val mobile = property[String]("mobile")
+  val * = email ~ mobile
 }

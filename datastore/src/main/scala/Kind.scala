@@ -6,11 +6,15 @@ import com.google.appengine.api.datastore.{DatastoreService, Entity => GEntity, 
 /* Base trait for a "schema" of some kind E. */
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   
-  /* Must be lazy! */
   lazy val reflector = new highchair.poso.Reflector[E]
   lazy val c = findConstructor
   
   def * : Mapping[E]
+  
+  def newKey: Key = new GEntity(reflector.simpleName).getKey
+  
+  /** */
+  def childOf(ancestor: Key): Key = new GEntity(reflector.simpleName, ancestor).getKey
   
   def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, _e: GEntity) = {
     val a = reflector.field[A](e, pm.name)
@@ -35,8 +39,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     collection.JavaConversions.asScalaIterable(dss.prepare(q).asIterable) map entity2Object
   }
   
-  def delete(key: Key)(implicit dss: DatastoreService) {
-    dss.delete(key)
+  def delete(e: E)(implicit dss: DatastoreService) {
+    e.key.map(dss.delete(_))
   }
   
   def get(key: Key)(implicit dss: DatastoreService) = 

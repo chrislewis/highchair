@@ -5,22 +5,40 @@ import org.specs._
 
 class RelationSpec extends highchair.specs.DataStoreSpec {
   
-  val no_friends = User(None, "Chris", Nil)
-  
   "Users" should {
-    
-    val friendless = User.put(no_friends)
+    val friendless  = User.put(User(None, "Grinch", None, Nil))
+    val new_friend  = User.put(User(None, "Bryan", None, Nil))
+    val has_friends = User.put(User(None, "Chris", None, new_friend.key.toList))
     
     "start with no friends" in {
-      User.get(friendless.key.get).get.friends must beEmpty
+      (for {
+        k <- friendless.key
+        u <- User.get(k)
+      } yield u.friends) must_== Some(Nil)
     }
     
     "have a friend after socializing" in {
-      val new_friend = User.put(User(None, "Bryan", Nil))
-      val has_friends = User.put(friendless.copy(friends = List(new_friend.key.get)))
-      User.get(has_friends.key.get).get.friends must_== List(new_friend.key.get)
+      (has_friends.key flatMap { User.get } match {
+        case Some(User(k, name, None, friends)) => friends
+        case _ => Nil
+      }) must_== new_friend.key.toList
     }
     
   }
+  
+  "ContactInfo" should {
+    val userKey = User.newKey
+    val info = ContactInfo.put(ContactInfo(Some(ContactInfo.childOf(userKey)), "chris@thegodcode.net", "511"))
+    val friendless = User.put(User(Some(userKey), "Chris", info.key, Nil))
+    
+    "have its key aggregated in a User" in {  
+      friendless.contactInfo must_== info.key
+    }
+    
+    "have a User key as its ancestor" in {
+      info.ancestorKey must_== friendless.key
+    }
+  }
+  
   
 }
