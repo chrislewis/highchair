@@ -27,7 +27,7 @@ sealed abstract class OtherProperty[A](_dflt: => A, f: Any => A) extends Prop[A]
   }
 }
 
-/* Properties for a few primitive types. */
+/* Properties for some core types. */
 class BooleanProp extends PropertyBase(true)
 class IntProp extends OtherProperty(0, _.toString.toInt)
 class LongProp extends PropertyBase(0L)
@@ -37,6 +37,7 @@ class StringProp extends PropertyBase("")
 class DateProp extends PropertyBase(new java.util.Date)
 class KeyProp extends PropertyBase[Key](error("No suitable default value!"))
 
+/** Property allowing any mapped property A to be mapped to Option[A]. */
 class OptionalProp[A](val wrapped: Prop[A]) extends PropertyBase[Option[A]](None) {
   override def translate(value: Option[A]) = value.getOrElse(null)
   
@@ -50,6 +51,7 @@ class OptionalProp[A](val wrapped: Prop[A]) extends PropertyBase[Option[A]](None
   }
 }
 
+/** Property allowing any mapped property A to be mapped to List[A]. */
 class ListProp[A](val wrapped: Prop[A]) extends PropertyBase[List[A]](Nil) {
   import java.util.Collections
   override def translate(value: List[A]) = value match {
@@ -66,17 +68,19 @@ class ListProp[A](val wrapped: Prop[A]) extends PropertyBase[List[A]](Nil) {
   }
 }
 
+/** Type-safe mapping for a property A of an entity E. */
 class PropertyMapping[E, A : Prop](val name: String, val clazz: Class[_]) {
   val prop = implicitly[Prop[A]]
 }
 
+/** Aggregates mapped properties for an entity E. */
 class Mapping[E](val mappings: Map[String, PropertyMapping[E, _]]) {
   def this(pm: PropertyMapping[E, _]) = this(collection.immutable.ListMap(pm.name -> pm))
   
   def ~(pm: PropertyMapping[E, _]) = new Mapping(mappings + (pm.name -> pm))
   
-  lazy val clazz: Seq[Class[_]] = mappings.map {
+  lazy val classes: Seq[Class[_]] = mappings.map {
     case (name, pm) => pm.clazz
-  }.toList
+  } toList
 }
 

@@ -60,7 +60,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     reflector.findConstructor { c =>
       val p_types = c.getParameterTypes.toList
       val g_types = c.getGenericParameterTypes.toList
-      p_types.containsSlice(*.clazz) &&
+      p_types.containsSlice(*.classes) &&
       findKey(p_types.zip(g_types)).isDefined
     } getOrElse error("No suitable constructor could be found!")
   

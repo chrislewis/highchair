@@ -61,7 +61,7 @@ object GeoCell {
 		val p2lon = math.toRadians(p2._2)
 		RADIUS * math.acos(fixDouble(math.sin(p1lat) * math.sin(p2lat)
 						+ math.cos(p1lat) * math.cos(p2lat)
-						* math.cos(p2lon - p1lon)));
+						* math.cos(p2lon - p1lon)))
 	}
 	
 	def fixDouble(dbl: Double): Double = 

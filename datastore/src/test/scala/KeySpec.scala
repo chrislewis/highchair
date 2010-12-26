@@ -25,7 +25,12 @@ class KeySpec extends highchair.specs.DataStoreSpec {
     }
     
     "update if it already exists" in {
-      Person.put(Person.put(saved.copy(age = 30)).copy(age = 31))
+      Person.put {
+        Person.put {
+          saved.copy(age = 30)
+        } copy(age = 31)
+      }
+      
       Person.find {
         Person.lastName === "Lewis"
       }.size must_== 1
