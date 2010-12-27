@@ -49,4 +49,18 @@ class KeySpec extends highchair.specs.DataStoreSpec {
     }
   }
   
+  "a Kind" should {
+    val key = Person.keyFor(1)
+    
+    "produce a Key for its kind" in {
+      key.getKind must_== "Person"
+    }
+    
+    "produce a Key by id" in {
+      key.getId must_== 1
+    }
+    
+    
+  }
+  
 }

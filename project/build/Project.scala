@@ -1,6 +1,6 @@
 import sbt._
 
-class Highchair(info: ProjectInfo) extends ParentProject(info) {
+class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Publish {
   
   val gae_version = "1.3.7"
   val specs_version = "1.6.6"

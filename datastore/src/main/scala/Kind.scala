@@ -1,7 +1,7 @@
 package highchair
 
 import meta._
-import com.google.appengine.api.datastore.{DatastoreService, Entity => GEntity, Key, Query, EntityNotFoundException}
+import com.google.appengine.api.datastore.{DatastoreService, Entity => GEntity, Key, KeyFactory, Query, EntityNotFoundException}
 
 /* Base trait for a "schema" of some kind E. */
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
@@ -10,6 +10,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   lazy val c = findConstructor
   
   def * : Mapping[E]
+  
+  def keyFor(id: Long) = KeyFactory.createKey(reflector.simpleName, id)
   
   def newKey: Key = new GEntity(reflector.simpleName).getKey
   
