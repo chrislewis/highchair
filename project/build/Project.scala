@@ -23,9 +23,6 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) {
   lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
     lazy val specs = specsDep % "test"
   }, spec)
-  lazy val geocell = project("geocell", "Highchair Geocell", new DefaultProject(_) {
-    lazy val specs = specsDep % "test"
-  }, datastore)
   
   /* Additional repos. */
   val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
