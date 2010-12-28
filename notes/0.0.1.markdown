@@ -1,0 +1,20 @@
+Simple Persistence for Scala in Google App Engine
+-------------------------------------------------
+It is possible to use JPA, JDO, or even the low-level API to handle persistence to Google App Engine's Datastore from scala.
+However, none of these are nice to use, especially from scala (xml + annotations + java collections = blah). [Highchair][hc] aims
+to provide an idiomatic and natural API for persisting scala objects to the datastore.
+
+This is a young library, so feedback is most welcome. [Highchair][hc] is currently in use in the reference application [lssn.me][lssn],
+a minimal URL shortner deployed to Google App Engine ([source][lssn-src]).
+
+Features
+--------
+* Type-safe query DSL.
+* Focus on immutability. Entity => object instantiation is done via constructors, so case classes are a natrual choice.
+* Easy to setup and use. 
+* Test harness to run data bound tests via [specs][specs].
+
+[hc]: https://github.com/chrislewis/highchair
+[specs]: http://code.google.com/p/specs/
+[lssn]: http://www.lssn.me/
+[lssn-src]: https://github.com/chrislewis/lssn.me
