@@ -37,7 +37,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   
   def find(params: Filter[E, _]*)(implicit dss: DatastoreService) = {
     val q = bindParams(params:_*)
-    collection.JavaConversions.asScalaIterable(dss.prepare(q).asIterable) map entity2Object
+    collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
   }
   
   def delete(e: E)(implicit dss: DatastoreService) {
