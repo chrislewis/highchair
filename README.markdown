@@ -15,7 +15,6 @@ into a dedicated class. The companion object is a natural choice.
 Note: Highchair currently requires persistent objects to recieve an Option[Key] as the first constructor argument.
 
     import highchair._
-    import highchair.meta.FilterOps._
     import com.google.appengine.api.datastore.Key
     
     case class Person(
@@ -36,14 +35,13 @@ Note: Highchair currently requires persistent objects to recieve an Option[Key] 
     
 ## Working With Persistent Data
 
-The Kind trait defines the core persistence logic for entities. Operations against the datastore carried out
+The Kind trait defines the core persistence logic for entities. Operations against the datastore are carried out
 using the [low-level API](http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/package-summary.html).
 For maximum flexibility, a Kind recieves a connection to the datastore as an implicit argument.
     
     import javax.servlet._
     import javax.servlet.http._
     
-    import highchair.meta.FilterOps._
     import com.google.appengine.api.datastore.DatastoreServiceFactory
     
     class HighchairDemoServlet extends HttpServlet {
