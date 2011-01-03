@@ -3,7 +3,6 @@ import sbt._
 class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Publish {
   
   val gae_version = "1.3.7"
-  val specs_version = "1.6.5"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
@@ -15,7 +14,13 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
   
   class HighchairModule(info: ProjectInfo) extends DefaultProject(info) with GAEDatastoreDeps
   
-  val specsDep = "org.scala-tools.testing" %% "specs" % specs_version
+  def specsDep =
+    "org.scala-tools.testing" %% "specs" % { 
+      if (buildScalaVersion startsWith "2.8.0")
+        "1.6.5"
+      else
+        "1.6.6"
+    }
   
   lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
     lazy val specs = specsDep
