@@ -1,7 +1,14 @@
 package highchair
 
 import meta._
-import com.google.appengine.api.datastore.{DatastoreService, Entity => GEntity, Key, KeyFactory, Query, EntityNotFoundException}
+import com.google.appengine.api.datastore.{
+  DatastoreService,
+  Entity => GEntity,
+  Key,
+  KeyFactory,
+  Query => GQuery,
+  EntityNotFoundException
+}
 
 /* Base trait for a "schema" of some kind E. */
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
@@ -35,8 +42,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     entity2Object(entity)
   }
   
-  def find(params: Filter[E, _]*)(implicit dss: DatastoreService) = {
-    val q = bindParams(params:_*)
+  def find(query: Query[E])(implicit dss: DatastoreService) = {
+    val q = bindParams(query.filters:_*)
     collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
   }
   
@@ -53,7 +60,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     }
   
   def bindParams(params: Filter[E, _]*) =
-    params.foldLeft(new Query(reflector.simpleName)) {
+    params.foldLeft(new GQuery(reflector.simpleName)) {
       (q, f) => f bind q
     }
   

@@ -26,23 +26,24 @@ class EntitySpec extends highchair.specs.DataStoreSpec {
     
     "find 1 Lewis with middleName Aaron" in {
       Person.find {
-        Person.lastName === "Lewis"
+        Person.firstName === "Chris" &&
+        Person.lastName === "Lewis" &&
         Person.middleName === Some("Aaron")
       }.size must_== 1
     }
     
     "find 0 Lewises under age 20" in {
-      Person.find(
-        Person.lastName === "Lewis",
+      Person.find {
+        Person.lastName === "Lewis" &&
         Person.age < 20
-      ) must beEmpty
+      } must beEmpty
     }
     
     "find 1 Lewis over age 40" in {
-      val pop = Person.find(
-        Person.lastName === "Lewis",
+      val pop = Person.find {
+        Person.lastName === "Lewis" &&
         Person.age > 40
-      )
+      }
       
       pop.size must_== 1
       pop.head.middleName must_== Some("Donald")
