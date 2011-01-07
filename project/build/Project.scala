@@ -2,7 +2,7 @@ import sbt._
 
 class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Publish {
   
-  val gae_version = "1.3.8"
+  val gae_version = "1.3.7"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
@@ -28,5 +28,8 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
   lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
     lazy val specs = specsDep % "test"
   }, spec)
+  
+  /* Additional repos. */
+  val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
   
 }
