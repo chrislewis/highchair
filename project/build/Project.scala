@@ -32,4 +32,8 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
   /* Additional repos. */
   val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
   
+  override def managedStyle = ManagedStyle.Maven
+  val publishTo = "Scala Tools Nexus" at
+    "http://nexus.scala-tools.org/content/repositories/releases/"
+  Credentials(Path.userHome / ".ivy2" / ".credentials", log)
 }
