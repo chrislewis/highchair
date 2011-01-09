@@ -22,14 +22,16 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
         "1.6.6"
     }
   
+  lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
+    override def deliverProjectDependencies = 
+      super.deliverProjectDependencies.toList - spec.projectID ++ Seq(spec.projectID % "test")
+  }, spec)
   lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
     lazy val specs = specsDep
   })
-  lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
-    lazy val specs = specsDep % "test"
-  }, spec)
   
-  /* Additional repos. */
-  val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
+  override def managedStyle = ManagedStyle.Maven
+  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
+  Credentials(Path.userHome / ".ivy2" / ".credentials", log)
   
 }
