@@ -26,6 +26,10 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
     override def deliverProjectDependencies = 
       super.deliverProjectDependencies.toList - spec.projectID ++ Seq(spec.projectID % "test")
   }, spec)
+  lazy val geocell = project("geocell", "Highchair Geocell", new HighchairModule(_) {
+    override def deliverProjectDependencies = 
+      super.deliverProjectDependencies.toList - spec.projectID ++ Seq(spec.projectID % "test")
+  }, spec)
   lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
     lazy val specs = specsDep
   })
