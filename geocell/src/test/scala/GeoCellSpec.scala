@@ -13,8 +13,8 @@ class GeoCellSpec extends Specification {
       GeoCell ? st_augustine must_== "989b5c5f82e47"
     }
     
-    "be in cell 9 at resolution 1" in {
-      GeoCell ? (st_augustine, 1) must_== "9"
+    "be in cell 9 at resolution One" in {
+      GeoCell ? (st_augustine, One) must_== "9"
     }
     
     "be about 58649 meters from Jacksonville" in {
@@ -27,8 +27,8 @@ class GeoCellSpec extends Specification {
       GeoCell ? jacksonville must_== "989c8471bbd5d"
     }
     
-    "be in cell 9 at resolution 1" in {
-      GeoCell ? (jacksonville, 1) must_== "9"
+    "be in cell 9 at resolution One" in {
+      GeoCell ? (jacksonville, One) must_== "9"
     }
   }
   
@@ -37,8 +37,8 @@ class GeoCellSpec extends Specification {
       GeoCell ? firenze must_== "8f65df3c409b3"
     }
     
-    "essere nella cella 8 alla risoluzione 1" in {
-      GeoCell ? (firenze, 1) must_== "8"
+    "essere nella cella 8 alla risoluzione One" in {
+      GeoCell ? (firenze, One) must_== "8"
     }
   }
   

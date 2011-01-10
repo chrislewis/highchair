@@ -1,5 +1,7 @@
 package highchair.geocell
 
+import Resolution._
+
 /**
  * A library for pure-functional geocell calculations, initially
  * ported from javageomodel http://code.google.com/p/javageomodel/.
@@ -10,7 +12,6 @@ object GeoCell {
   
   type Point = (Double, Double)
   
-  val MAX_RESOLUTION = 13
   val GRID_SIZE = 4
   val ALPHABET = "0123456789abcdef"
   val RADIUS = 6378135 /* meters */
@@ -24,11 +25,8 @@ object GeoCell {
       (pos._1 & 1) << 0)
   
   /** Calculate the geocell for a point at the given resolution. */
-  def ?(point: Point, resolution: Int = MAX_RESOLUTION): String = {
-    def _compute(n: Double, s: Double, e: Double, w: Double, cell: String = "", depth: Int = 0): String = {
-      if(depth >= resolution)
-        cell
-      else {
+  def ?(point: Point, resolution: Resolution = Resolution.Max): String = {
+    def _compute(n: Double, s: Double, e: Double, w: Double, cell: String = "", depth: Option[Resolution] = Some(Resolution.Min)): String = {
         val x = math.min((GRID_SIZE * (point._2 - w) / (e - w)),
           GRID_SIZE - 1).toInt;
         val y = math.min((GRID_SIZE * (point._1 - s) / (n - s)),
@@ -36,22 +34,26 @@ object GeoCell {
         val subcellLonSpan = (e - w) / GRID_SIZE
         val subcellLatSpan = (n - s) / GRID_SIZE
         
-        _compute(
-          (s + (subcellLatSpan * y)) + subcellLatSpan,
-          s + (subcellLatSpan * y),
-          (w + (subcellLonSpan * x)) + subcellLonSpan,
-          w + (subcellLonSpan * x),
-          cell + subdivChar((x, y)),
-          depth + 1
-        )
-      }
+        val nextCell = cell + subdivChar((x, y))
+        
+        depth match {
+          case Some(r) if r == resolution => nextCell
+          case _ => _compute(
+            (s + (subcellLatSpan * y)) + subcellLatSpan,
+            s + (subcellLatSpan * y),
+            (w + (subcellLonSpan * x)) + subcellLonSpan,
+            w + (subcellLonSpan * x),
+            nextCell,
+            depth flatMap (_ next)
+          )
+        }
     }
     _compute(90d, -90d, 180d, -180d)
   }
   
   /** Calculate the geocells in which the point resides at every resolution. */
   def ??(point: Point) = 
-    (1 to MAX_RESOLUTION) map(?(point, _)) toList
+    (Resolution.Min to Resolution.Max) map(?(point, _)) toList
   
   /** Calculate the distance between two points in meters. */
 	def distance(p1: Point, p2: Point) = {
@@ -64,11 +66,10 @@ object GeoCell {
 						* math.cos(p2lon - p1lon)))
 	}
 	
-	def fixDouble(dbl: Double): Double = 
-	  if (dbl > 1)
-	    1
-	  else if (dbl < -1)
-	    -1
-	  else
-	    dbl
+	def fixDouble(d: Double): Double = d match {
+	  case _ if d > 1   => 1
+	  case _ if d < -1  => -1
+	  case _            => d
+	}
+	
 }
