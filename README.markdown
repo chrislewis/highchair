@@ -69,3 +69,22 @@ For maximum flexibility, a Kind recieves a connection to the datastore as an imp
 
 
 See the [specs](http://github.com/chrislewis/highchair/tree/master/datastore/src/test/scala) for more examples.
+
+## Install
+
+Highchair requires Scala 2.8, cross-built for versions 2.8.0 and 2.8.1. Highchair artifacts are published using
+the excellent built tool [sbt](http://code.google.com/p/simple-build-tool/).
+
+### sbt
+
+    val ufj = "net.thegodcode" %% "highchair-datastore" % "0.0.1"
+
+### maven, ivy
+
+Because sbt uses the maven module format, artificats published via sbt are usable by maven and ivy. If you are
+unfamiliar with sbt, note the following:
+
+  - You must be explicit about the artifact versions. Because Highchair is cross-built its artifacts are suffixed
+    with _scala_version, where scala_version is the version of scala against which the artifact was compiled.
+    Therefore, in tools such as maven and ivy, the artifact id would be `highchair-datastore_2.8.0`.
+  - You must add `http://scala-tools.org/repo-releases` as a repository.
