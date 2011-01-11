@@ -81,7 +81,7 @@ the excellent built tool [sbt](http://code.google.com/p/simple-build-tool/).
 
 ### maven, ivy
 
-Because sbt uses the maven module format, artificats published via sbt are usable by maven and ivy. If you are
+Because sbt uses the maven module format, artifacts published via sbt are usable by maven and ivy. If you are
 unfamiliar with sbt, note the following:
 
   - You must be explicit about the artifact versions. Because Highchair is cross-built its artifacts are suffixed
