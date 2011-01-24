@@ -12,7 +12,7 @@ class ResolutionSpec extends Specification {
       Three to Three must_== List(Three)
     }
     
-    "be empty" in {
+    "be empty when the upperbound is a lower resolution" in {
       Five to Four must beEmpty
     }
   }

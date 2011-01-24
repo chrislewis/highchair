@@ -2,7 +2,7 @@ import sbt._
 
 class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Publish {
   
-  val gae_version = "1.3.7"
+  val gae_version = "1.4.0"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {

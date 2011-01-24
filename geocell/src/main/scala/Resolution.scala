@@ -1,18 +1,22 @@
 package highchair.geocell
 
-sealed abstract class Resolution(val res: Int, val next: Option[Resolution]) extends math.Ordered[Resolution] {
+sealed abstract class Resolution(
+  val res: Int,
+  val next: Option[Resolution]
+) extends math.Ordered[Resolution] {
   
-  def to(r: Resolution) = {
+  /** Create a List of Resolutions (similar Int#to). */
+  def to(that: Resolution) = {
     def _to(start: Resolution, end: Resolution, l: List[Resolution]): List[Resolution] = (start, l) match {
       case _ if start == end => l
       case (Resolution(_, None), _) => l
       case (Resolution(_, Some(next)), _) => _to(next, end, next :: l)
     }
     
-    if(this > r)
+    if(this > that)
       Nil
     else
-      _to(this, r, this :: Nil) reverse
+      _to(this, that, this :: Nil) reverse
   }
   
   def compare(that: Resolution) =
