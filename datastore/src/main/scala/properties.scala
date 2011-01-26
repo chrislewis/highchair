@@ -5,66 +5,52 @@ import com.google.appengine.api.datastore.{Entity, Key}
 /* A mapping from a Datastore type to a scala type, with methods to get from/set on an Entity. */
 sealed trait Prop[A] {
   def dflt: A
-  def translate(value: A): Any = value
+  
+  def toStoredType(value: A): Any = value // TODO use implicits
+  
+  def fromStoredType(st: Any) = st.asInstanceOf[A] // TODO use implicits
+  
   def get(e: Entity, name: String) = e.getProperty(name) match {
     case null => dflt
-    case raw => raw.asInstanceOf[A]
+    case raw => fromStoredType(raw)
   }
+  
   def set(e: Entity, name: String, value: A) = {
-    e.setProperty(name, translate(value))
+    e.setProperty(name, toStoredType(value))
     e
   }
 }
 
-sealed abstract class PropertyBase[A](_dflt: => A) extends Prop[A] {
+sealed abstract class BaseProp[A](_dflt: => A) extends Prop[A] {
   def dflt = _dflt
-}
-sealed abstract class OtherProperty[A](_dflt: => A, f: Any => A) extends Prop[A] {
-  def dflt = _dflt
-  override def get(e: Entity, name: String) = e.getProperty(name) match {
-    case null => dflt
-    case raw => f(raw)
-  }
 }
 
 /* Properties for some core types. */
-class BooleanProp extends PropertyBase(true)
-class IntProp extends OtherProperty(0, _.toString.toInt)
-class LongProp extends PropertyBase(0L)
-class FloatProp extends PropertyBase(0f)
-class DoubleProp extends PropertyBase(0d)
-class StringProp extends PropertyBase("")
-class DateProp extends PropertyBase(new java.util.Date)
-class KeyProp extends PropertyBase[Key](error("No suitable default value!"))
+class BooleanProp extends BaseProp(true)
+class IntProp extends BaseProp(0) { override def fromStoredType(st: Any) = st.toString.toInt }
+class LongProp extends BaseProp(0L)
+class FloatProp extends BaseProp(0f)
+class DoubleProp extends BaseProp(0d)
+class StringProp extends BaseProp("")
+class DateProp extends BaseProp(new java.util.Date)
+class KeyProp extends BaseProp[Key](error("No suitable default value!"))
 
 /** Property allowing any mapped property A to be mapped to Option[A]. */
-class OptionalProp[A](val wrapped: Prop[A]) extends PropertyBase[Option[A]](None) {
-  override def translate(value: Option[A]) = value.getOrElse(null)
+class OptionalProp[A](val wrapped: Prop[A]) extends BaseProp[Option[A]](None) {
+  override def toStoredType(value: Option[A]) = value.getOrElse(null)
   
-  override def get(e: Entity, name: String) = e.getProperty(name) match {
-    case null => None
-    case _ => Some(wrapped.get(e, name))
-  }
-  override def set(e: Entity, name: String, value: Option[A]) = {
-    e.setProperty(name, translate(value))
-    e
-  }
+  override def fromStoredType(st: Any) = Some(wrapped.fromStoredType(st))
 }
 
 /** Property allowing any mapped property A to be mapped to List[A]. */
-class ListProp[A](val wrapped: Prop[A]) extends PropertyBase[List[A]](Nil) {
-  import java.util.Collections
-  override def translate(value: List[A]) = value match {
-    case Nil => Collections.emptyList
+class ListProp[A](val wrapped: Prop[A]) extends BaseProp[List[A]](Nil) {
+  override def toStoredType(value: List[A]) = value match {
+    case Nil => null
     case xs => scala.collection.JavaConversions.asList(xs)
   }
   
-  override def get(e: Entity, name: String) = e.getProperty(name) match {
-    case null => Nil
-    case _ => {
-      val jlist = e.getProperty(name).asInstanceOf[java.util.List[A]]
-      List(jlist.toArray:_*).map(_.asInstanceOf[A]) // FIXME we need another translate here
-    }
+  override def fromStoredType(st: Any) = st match {
+    case jlist: java.util.List[_] => List(jlist.toArray:_*) map wrapped.fromStoredType
   }
 }
 

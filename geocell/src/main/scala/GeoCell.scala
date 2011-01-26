@@ -18,6 +18,24 @@ object GeoCell {
   val ALPHABET = "0123456789abcdef"
   val RADIUS = 6378135 /* meters */
     
+
+  // Returns the (x, y) of the geocell character in the 4x4 alphabet grid.
+  /* Calculate the coordinates of a character   */
+  def subdivXY(c: Char): Point = ALPHABET indexOf c match {
+    case _c => (
+      (_c & 4) >> 1 | (_c & 1) >> 0,
+      (_c & 8) >> 2 | (_c & 2) >> 1
+    )
+  }
+  
+  // Returns the geocell character in the 4x4 alphabet grid at pos. (x, y).
+  def subdivChar(pos: (Int, Int)) =
+    ALPHABET(
+      (pos._2 & 2) << 2 |
+      (pos._1 & 2) << 1 |
+      (pos._2 & 1) << 1 |
+      (pos._1 & 1) << 0)
+  
   /** Computes the rectangular boundaries (bounding box) of the given geocell. */
   def computeBox(cell: String) = {
     def _computeBox(box: Box, cell: List[Char]): Box = (box, cell) match {
@@ -34,22 +52,6 @@ object GeoCell {
     
     _computeBox(Box((90, 180), (-90, -180)), cell toList)
   }
-
-  // FIXME handle non hex chars
-  def subdivXY(c: Char): Point = ALPHABET indexOf c match {
-    case _c => (
-      (_c & 4) >> 1 | (_c & 1) >> 0,
-      (_c & 8) >> 2 | (_c & 2) >> 1
-    )
-  }
-  
-  // Returns the geocell character in the 4x4 alphabet grid at pos. (x, y).
-  def subdivChar(pos: (Int, Int)) =
-    ALPHABET(
-      (pos._2 & 2) << 2 |
-      (pos._1 & 2) << 1 |
-      (pos._2 & 1) << 1 |
-      (pos._1 & 1) << 0)
   
   /** Calculate the geocell for a point at the given resolution. */
   def ?(point: Point, resolution: Resolution = Resolution.Max): String = {

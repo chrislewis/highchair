@@ -18,7 +18,7 @@ sealed class PropertyFilter[E, A](val property: PropertyMapping[E, A]) {
   
   def single(filter: FO, value: A) = new Filter[E, A] {
     def bind(q: GQuery) = {
-      q.addFilter(property.name, filter, property.prop.translate(value))
+      q.addFilter(property.name, filter, property.prop.toStoredType(value))
     }
   }
   
