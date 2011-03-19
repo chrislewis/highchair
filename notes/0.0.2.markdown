@@ -18,3 +18,4 @@ Features
 * ``&&`` operations for a more natural query syntax
 * Cross-compilation for Scala 2.8.0 and 2.8.1
 * Tested against GAE artifacts 1.3.7, 1.3.8, 1.4.0.
+* Added support for appengine `Text` datastore type
