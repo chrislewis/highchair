@@ -7,10 +7,10 @@ sealed trait Filter[E, A] {
   def bind(q: GQuery): GQuery
 }
 
-sealed abstract class SortDirection[E, A](val p: PropertyMapping[E, A], val direction: SD) extends Filter[E, A] {
+sealed abstract class SortDirection[E, A](val p: PropertyMapping[E, A], val direction: SD)
+  extends Filter[E, A] {
   def bind(q: GQuery) = q.addSort(p.name, direction)
 }
-
 sealed case class Asc[E, A](val property: PropertyMapping[E, A]) extends SortDirection(property, SD.ASCENDING)
 sealed case class Desc[E, A](val property: PropertyMapping[E, A]) extends SortDirection(property, SD.DESCENDING)
 
@@ -40,11 +40,12 @@ sealed class PropertyFilter[E, A](val property: PropertyMapping[E, A]) {
   def in  (value: A*) = multi(FO.IN, value:_*)
 }
 
-sealed class Query[E](val filters: List[Filter[E, _]]) {
-  def &&(f: Filter[E, _]) = new Query(f :: filters)
+sealed case class Query[E](val filters: List[Filter[E, _]], val sorts: List[SortDirection[E, _]]) {
+  def &&(f: Filter[E, _]) = Query(f :: filters, sorts)
+  def sort(s: SortDirection[E, _]) = Query(filters, s :: sorts)
 }
 
 object FilterOps {
   implicit def Property2Filter[E, A](pm: PropertyMapping[E, A]) = new PropertyFilter(pm)
-  implicit def Filter2Query[E](f: Filter[E, _]) = new Query(List(f))
+  implicit def Filter2Query[E](f: Filter[E, _]) = Query(List(f), Nil)
 }

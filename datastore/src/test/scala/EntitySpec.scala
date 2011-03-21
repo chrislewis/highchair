@@ -57,6 +57,22 @@ class EntitySpec extends highchair.specs.DataStoreSpec {
       pop.head.middleName must_== Some("Donald")
     }
     
+    "sort ascending by age" in {
+      val ascAges = Person.find {
+        Person.age > 20 sort highchair.meta.Asc(Person.age)
+      } map (_ age)
+      
+      ascAges must_== List(29, 31, 60)
+    }
+    
+    "sort descending by age" in {
+      val descAges = Person.find {
+        Person.age > 20 sort highchair.meta.Desc(Person.age)
+      } map (_ age)
+      
+      descAges must_== List(60, 31, 29)
+    }
+    
     "find 0 Joneses" in {
       Person.find {
         Person.lastName === "Jones"

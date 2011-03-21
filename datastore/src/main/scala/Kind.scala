@@ -43,7 +43,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   }
   
   def find(query: Query[E])(implicit dss: DatastoreService) = {
-    val q = bindParams(query.filters:_*)
+    val q = bindParams(new GQuery(reflector.simpleName), (query.filters ::: query.sorts):_*)
     collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
   }
   
@@ -59,11 +59,9 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
       case e: EntityNotFoundException => None
     }
   
-  def bindParams(params: Filter[E, _]*) =
-    params.foldLeft(new GQuery(reflector.simpleName)) {
-      (q, f) => f bind q
-    }
-  
+  def bindParams(q: GQuery, params: Filter[E, _]*) =
+    (q /: params) { (q, f) => f bind q }
+    
   private def findConstructor = 
     reflector.findConstructor { c =>
       val p_types = c.getParameterTypes.toList
