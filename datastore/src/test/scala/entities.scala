@@ -2,7 +2,7 @@ package highchair.tests
 
 import highchair._
 import java.util.Date
-import com.google.appengine.api.datastore.Key
+import com.google.appengine.api.datastore.{Key, Text}
 
 case class Person(
   val key: Option[Key],
@@ -50,4 +50,17 @@ object ContactInfo extends Kind[ContactInfo] {
   val email = property[String]("email")
   val mobile = property[String]("mobile")
   val * = email ~ mobile
+}
+
+
+case class Note(
+  val key: Option[Key],
+  val title: String,
+  val details: Text
+) extends Entity[Note]
+
+object Note extends Kind[Note] {
+  val title = property[String]("title")
+  val details = property[Text]("details")
+  val * = title ~ details 
 }

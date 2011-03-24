@@ -1,0 +1,21 @@
+Queries
+-------
+Queries are now represented by ``Query`` instances. ``Kind#find`` now receives
+a ``Query`` instance instead of a vararg list of filters. Filters are added
+to a query by the and (``&&``) operation.
+    
+    Person find {
+      Person.firstName === "Chris" && Person.lastName === "Lewis"
+    }
+    
+Implicit conversions exist for converting properties to property filters as well
+as property filters to queries, so the following query works as expected:
+    
+    Person find { Person.lastName === "Lewis" }
+    
+Features
+--------------
+* ``&&`` operations for a more natural query syntax
+* Cross-compilation for Scala 2.8.0 and 2.8.1
+* Tested against GAE artifacts 1.3.7, 1.3.8, 1.4.0.
+* Added support for appengine `Text` datastore type

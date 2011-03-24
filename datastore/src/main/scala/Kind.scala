@@ -1,7 +1,14 @@
 package highchair
 
 import meta._
-import com.google.appengine.api.datastore.{DatastoreService, Entity => GEntity, Key, KeyFactory, Query, EntityNotFoundException}
+import com.google.appengine.api.datastore.{
+  DatastoreService,
+  Entity => GEntity,
+  Key,
+  KeyFactory,
+  Query => GQuery,
+  EntityNotFoundException
+}
 
 /* Base trait for a "schema" of some kind E. */
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
@@ -35,8 +42,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     entity2Object(entity)
   }
   
-  def find(params: Filter[E, _]*)(implicit dss: DatastoreService) = {
-    val q = bindParams(params:_*)
+  def find(query: Query[E])(implicit dss: DatastoreService) = {
+    val q = bindParams(new GQuery(reflector.simpleName), (query.filters ::: query.sorts):_*)
     collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
   }
   
@@ -52,11 +59,9 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
       case e: EntityNotFoundException => None
     }
   
-  def bindParams(params: Filter[E, _]*) =
-    params.foldLeft(new Query(reflector.simpleName)) {
-      (q, f) => f bind q
-    }
-  
+  def bindParams(q: GQuery, params: Filter[E, _]*) =
+    (q /: params) { (q, f) => f bind q }
+    
   private def findConstructor = 
     reflector.findConstructor { c =>
       val p_types = c.getParameterTypes.toList
@@ -90,6 +95,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   implicit object dateProp extends DateProp
   implicit object keyProp extends KeyProp
   
+  implicit object textProp extends TextProp
+
   implicit def type2option[A](implicit prop: Prop[A]): OptionalProp[A] =
     new OptionalProp(prop)
     

@@ -2,7 +2,7 @@ import sbt._
 
 class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Publish {
   
-  val gae_version = "1.3.7"
+  val gae_version = "1.4.0"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
@@ -34,7 +34,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
   val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
   
   override def managedStyle = ManagedStyle.Maven
-  val publishTo = "Scala Tools Nexus" at
-    "http://nexus.scala-tools.org/content/repositories/releases/"
+  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
   Credentials(Path.userHome / ".ivy2" / ".credentials", log)
+  
 }
