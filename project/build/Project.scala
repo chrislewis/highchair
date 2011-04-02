@@ -12,7 +12,12 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
     val gaeApiLabs = "com.google.appengine" % "appengine-api-labs" % gae_version % "provided"
   }
   
-  class HighchairModule(info: ProjectInfo) extends DefaultProject(info) with GAEDatastoreDeps
+  class HighchairModule(info: ProjectInfo) extends DefaultProject(info) with GAEDatastoreDeps {
+    /* Source attachements. */
+    override def packageSrcJar = defaultJarPath("-sources.jar")
+    lazy val sourceArtifact = Artifact.sources(artifactID)
+    override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)
+  }
   
   def specsDep =
     "org.scala-tools.testing" %% "specs" % { 
