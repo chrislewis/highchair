@@ -59,7 +59,7 @@ class EntitySpec extends highchair.specs.DataStoreSpec {
     
     "sort ascending by age" in {
       val ascAges = Person.find {
-        Person.age > 20 sort highchair.meta.Asc(Person.age)
+        Person.age > 20 sort Asc(Person.age)
       } map (_ age)
       
       ascAges must_== List(29, 31, 60)
@@ -67,7 +67,7 @@ class EntitySpec extends highchair.specs.DataStoreSpec {
     
     "sort descending by age" in {
       val descAges = Person.find {
-        Person.age > 20 sort highchair.meta.Desc(Person.age)
+        Person.age > 20 sort Desc(Person.age)
       } map (_ age)
       
       descAges must_== List(60, 31, 29)
