@@ -24,3 +24,5 @@ Features
 Fixes
 -----
 * Sort operations work
+
+[philcali]: https://github.com/philcali/
