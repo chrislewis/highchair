@@ -1,7 +1,7 @@
 Queries
 -------
-Queries are now represented by ``Query`` instances. ``Kind#find`` now receives
-a ``Query`` instance instead of a vararg list of filters. Filters are added
+Queries are now represented by ``Query`` instances. ``Kind#find`` receives
+a ``Query`` instance instead of a list of filters. Filters are added
 to a query by the and (``&&``) operation.
     
     Person find {
