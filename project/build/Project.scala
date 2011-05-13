@@ -24,7 +24,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
       if (buildScalaVersion startsWith "2.8.0")
         "1.6.5"
       else
-        "1.6.6"
+        "1.6.8"
     }
   
   lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
