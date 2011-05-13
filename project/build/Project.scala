@@ -23,6 +23,8 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
     "org.scala-tools.testing" %% "specs" % { 
       if (buildScalaVersion startsWith "2.8.0")
         "1.6.5"
+      else if (buildScalaVersion startsWith "2.8.1")
+        "1.6.7.2"
       else
         "1.6.8"
     }
