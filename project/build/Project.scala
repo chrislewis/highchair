@@ -4,7 +4,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   with posterous.Publish
   with gh.Issues {
   
-  val gae_version = "1.4.0"
+  val gae_version = "1.4.3"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
@@ -36,6 +36,9 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
       super.deliverProjectDependencies.toList - spec.projectID ++ Seq(spec.projectID % "test")
   }, spec)
   lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
+    lazy val specs = specsDep
+  })
+  lazy val remote = project("remote", "Highchair Remote", new HighchairModule(_) {
     lazy val specs = specsDep
   })
   
