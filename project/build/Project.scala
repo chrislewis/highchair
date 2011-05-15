@@ -1,6 +1,8 @@
 import sbt._
 
-class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Publish {
+class Highchair(info: ProjectInfo) extends ParentProject(info)
+  with posterous.Publish
+  with gh.Issues {
   
   val gae_version = "1.4.0"
   
@@ -44,4 +46,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info) with posterous.Pu
   val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
   Credentials(Path.userHome / ".ivy2" / ".credentials", log)
   
+  /* Github creds (gh-issues). */
+  def ghCredentials = gh.LocalGhCreds(log)
+  def ghRepository = ("chrislewis", "highchair")
 }
