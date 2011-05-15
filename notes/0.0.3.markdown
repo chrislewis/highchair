@@ -1,0 +1,29 @@
+Highchair Remote
+----------------
+As of Google App Engine SDK version 1.4.3, it is possible to interface
+with App Engine services from any application through the
+[Remote API library][gae_remote].
+
+    val remote = Remote("localhost" -> 8080, "user@foo.com" -> "foopass")
+
+With a ``Remote`` instance, you can interact with various App Engine services.
+
+    remote {
+      val ds = DatastoreServiceFactory.getDatastoreService
+      ds.put(new Entity("RemoteEntity"))
+    }
+
+``Remote``s allow you to scope remote calls, such that when the block
+terminates, subsequent service calls will resume local bindings. Because
+it's a loaner, you don't need to worry about failures wreaking havoc;
+cleanup happens automatically in all scenarios.
+
+Calls to ``remote`` result in an ``Either[Throwable, A]``, where ``A`` is
+the result type of the block. This allows you to sanely retrieve results
+(if you want them) on success, as well as deal with any failures.
+
+[gae_remote]: http://code.google.com/appengine/docs/java/tools/remoteapi.html
+
+Breaking Changes
+----------------
+* ``Kind#newKey`` has been removed as it relied on a hack that fails locally in current versions of the sdk 

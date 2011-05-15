@@ -7,10 +7,6 @@ import com.google.appengine.tools.remoteapi.{
 import scala.util.control.Exception.catching
 
 /**
- * A Remote provides a service channel to a running GAE
- * application. Remotes are a thin wrapper around GAE's remote
- * api, and so any supported operation can be performed.
- * 
  * val remote = Remote("localhost" -> 8080, "user@foo.com" -> "foopass")
  * val remoteSave = remote {
  *   val ds = DatastoreServiceFactory.getDatastoreService
