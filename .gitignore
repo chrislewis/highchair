@@ -3,3 +3,4 @@ target/
 lib_managed/
 src_managed/
 project/boot/
+remote/lib/appengine-remote-api.jar
