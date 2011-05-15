@@ -37,9 +37,8 @@ case class Remote(server: (String, Int), user: (String, String)) {
       .credentials(usr, psswd)
   
   /* Invoke a block in a remote context and clean up automatically. */
-  def apply[A](block: => A): Either[Throwable, A] = {
+  def apply[A](block: => A): Either[Throwable, A] =
     install fold (Left(_), withInstaller(block)(_))
-  }
   
   private def install =
     catching (classOf[Exception]) either { val i = new RemoteApiInstaller; i.install(options); i }

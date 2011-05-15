@@ -10,7 +10,7 @@ import highchair.remote.Remote
 
 class RemoteSpec extends Specification {
   
-  //val helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig)
+  val helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig)
   val remote = Remote("localhost" -> 8080, "user@foo.com" -> "foopass")
   val invalidRemote = Remote("localhost" -> 80, "user@foo.com" -> "foopass")
   
