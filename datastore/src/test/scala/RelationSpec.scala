@@ -27,7 +27,7 @@ class RelationSpec extends highchair.specs.DataStoreSpec {
   }
   
   "ContactInfo" should {
-    val userKey = User.newKey
+    val userKey = User.keyFor(1)
     val info = ContactInfo.put(ContactInfo(Some(ContactInfo.childOf(userKey)), "chris@thegodcode.net", "511"))
     val friendless = User.put(User(Some(userKey), "Chris", info.key, Nil))
     

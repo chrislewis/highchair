@@ -19,9 +19,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   def * : Mapping[E]
   
   def keyFor(id: Long) = KeyFactory.createKey(reflector.simpleName, id)
-  
-  def newKey: Key = new GEntity(reflector.simpleName).getKey
-  
+    
   def childOf(ancestor: Key): Key = new GEntity(reflector.simpleName, ancestor).getKey
   
   def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, _e: GEntity) = {
