@@ -25,7 +25,9 @@ sealed class PropertyFilter[E, A](val property: PropertyMapping[E, A]) {
   
   /* Filter operations. */
   def === (value: A)  = single(FO.EQUAL, value)
+  def is (value: A)   = ===(value)
   def !== (value: A)  = single(FO.NOT_EQUAL, value)
+  def not (value: A)  = !==(value)
   def >   (value: A)  = single(FO.GREATER_THAN, value)
   def >=  (value: A)  = single(FO.GREATER_THAN_OR_EQUAL, value)
   def <   (value: A)  = single(FO.LESS_THAN, value)
