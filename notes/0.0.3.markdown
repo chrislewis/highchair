@@ -13,9 +13,9 @@ With a ``Remote`` instance, you can interact with various App Engine services.
       ds.put(new Entity("RemoteEntity"))
     }
 
-``Remote``s allow you to scope remote calls, such that when the block
+``Remote``s allow you to scope remote calls such that when the block
 terminates, subsequent service calls will resume local bindings. Because
-it's a loaner, you don't need to worry about failures wreaking havoc;
+it's a [loaner](http://scala.sygneca.com/patterns/loan), you don't need to worry about failures wreaking havoc;
 cleanup happens automatically in all scenarios.
 
 Calls to ``remote`` result in an ``Either[Throwable, A]``, where ``A`` is

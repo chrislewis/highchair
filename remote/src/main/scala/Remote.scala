@@ -7,19 +7,6 @@ import com.google.appengine.tools.remoteapi.{
 import scala.util.control.Exception.catching
 
 /**
- * val remote = Remote("localhost" -> 8080, "user@foo.com" -> "foopass")
- * val remoteSave = remote {
- *   val ds = DatastoreServiceFactory.getDatastoreService
- *   ds.put(new Entity("RemoteEntity"))
- * }
- *
- * Remote#apply is a "loaner," so the remote options are properly
- * cleaned up when the block terminates. The result of apply is
- * an Either[Throwable, A]: a caught exception, if any, or some
- * A when succssful. In the previous example. remoteSave is a
- * Right(Key), as the put opertion results in an entity Key
- * (when successful).
- *
  * @see http://code.google.com/appengine/articles/remote_api.html
  * @see http://code.google.com/appengine/docs/java/tools/remoteapi.html
  * @author Chris Lewis <chris@thegodcode.net>
