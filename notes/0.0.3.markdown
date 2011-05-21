@@ -24,6 +24,25 @@ the result type of the block. This allows you to sanely retrieve results
 
 [gae_remote]: http://code.google.com/appengine/docs/java/tools/remoteapi.html
 
+
+Highchair Util and Spec
+--------------
+The util module provides a single useful tool, `DevServer`, which provides
+basic control over a local GAE dev server. If you have defined the
+`APPENGINE_SDK_HOME` environment variable, the following is enough to obtain
+a `DevServer` instance:
+
+    val server = DevServer()
+
+With a `DevServer`, you can quickly start and deploy an app:
+
+    server.start(pathToWar)
+    
+The spec module contains a new base spec for integration tests against a
+local app:
+
+    class MyGAESpec extends AppStoreSpec(pathToWar) { /* specs here */ }
+
 Breaking Changes
 ----------------
 * ``Kind#newKey`` has been removed as it relied on a hack that fails locally in current versions of the sdk 

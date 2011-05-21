@@ -1,22 +1,21 @@
 package highchair.specs
 
-import highchair.util.{DevServer, Port}
+import highchair.util.DevServer
 import org.specs._
 
 class AppStoreSpec(war: String) extends Specification {
   
-  val serverPort = Port.any
-  val gae = devServer
+  def configureDevServer = DevServer()
   
-  def devServer = DevServer(port = serverPort)
+  val devServer = configureDevServer
   
-  /* Boot a GAE web app through google tooling. */
+  /* Deploy a GAE web app to a DevServer. */
   doBeforeSpec {
-    gae.start(war)
+    devServer.start(war)
   }
   
-  /* Shutdown the GAE app. */
+  /* Shutdown the DevServer. */
   doAfterSpec {
-    gae.stop()
+    devServer.stop()
   }
 }

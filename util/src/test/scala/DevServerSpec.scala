@@ -7,7 +7,7 @@ import org.specs._
 class DevServerSpec extends Specification {
   
   val server = DevServer()
-  val guestbookApp = DevServer.sdk.map(_ + "/demos/guestbook/war/").getOrElse(error("No SDK!") )
+  val guestbookApp = DevServer.sdk.map(_ + "/demos/guestbook/war/").getOrElse(error("No SDK!"))
   val host = :/ ("localhost", server.port)
   
   doBeforeSpec {

@@ -32,7 +32,7 @@ object IO {
   
   /**
    * Consume input until the predicate returns true, blocking on each read.
-   * TODO investigate interatees
+   * TODO investigate iteratees
    */
   def readUntil(test: String => Boolean)(is: java.io.InputStream) = {
     val out = new scala.collection.mutable.ListBuffer[String]()
