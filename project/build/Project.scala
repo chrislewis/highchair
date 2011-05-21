@@ -5,13 +5,14 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   with gh.Issues {
   
   val gae_version = "1.4.3"
+  val dispatch_version = "0.8.1"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
-    val gaeSdk = "com.google.appengine" % "appengine-api-1.0-sdk" % gae_version % "provided"
-    val gaeStubs = "com.google.appengine" % "appengine-api-stubs" % gae_version % "provided"
-    val gaeTest = "com.google.appengine" % "appengine-testing" % gae_version % "provided"
-    val gaeApiLabs = "com.google.appengine" % "appengine-api-labs" % gae_version % "provided"
+    val gaeSdk      = "com.google.appengine" % "appengine-api-1.0-sdk" % gae_version % "provided"
+    val gaeStubs    = "com.google.appengine" % "appengine-api-stubs" % gae_version % "provided"
+    val gaeTest     = "com.google.appengine" % "appengine-testing" % gae_version % "provided"
+    val gaeApiLabs  = "com.google.appengine" % "appengine-api-labs" % gae_version % "provided"
   }
   
   class HighchairModule(info: ProjectInfo) extends DefaultProject(info) with GAEDatastoreDeps {
@@ -37,9 +38,13 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   }, spec)
   lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
     lazy val specs = specsDep
-  })
+  }, util)
   lazy val remote = project("remote", "Highchair Remote", new HighchairModule(_) {
     lazy val specs = specsDep
+  })
+  lazy val util = project("util", "Highchair Util", new DefaultProject(_) {
+    lazy val specs = specsDep
+    lazy val dispatch = "net.databinder" %% "dispatch-http" % dispatch_version
   })
   
   /* Additional repos. */
