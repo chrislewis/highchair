@@ -1,3 +1,8 @@
+Breaking Changes
+----------------
+* ``Kind#newKey`` has been removed as it relied on a hack that fails locally in current versions of the sdk
+
+
 Highchair Remote
 ----------------
 As of Google App Engine SDK version 1.4.3, it is possible to interface
@@ -38,11 +43,10 @@ With a `DevServer`, you can quickly start and deploy an app:
 
     server.start(pathToWar)
     
-The spec module contains a new base spec for integration tests against a
-local app:
+The spec module now contains a new base spec for integration tests against a
+local app. By supply the path to the war directory, `AppSepc` manages the
+startup and shutdown of the application under test. All you have to do is
+provide the war path and the specs:
 
     class MyGAESpec extends highchair.specs.AppSpec { /* specs here */ }
-
-Breaking Changes
-----------------
-* ``Kind#newKey`` has been removed as it relied on a hack that fails locally in current versions of the sdk 
+    
