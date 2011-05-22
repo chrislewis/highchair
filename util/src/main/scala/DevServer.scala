@@ -46,7 +46,7 @@ class DevServer(val sdkHome: String, val javaBin: String, val port: Int) {
       catching(classOf[Exception]) andFinally(proc = None) either {
         p.waitFor()
         p.exitValue()
-      }  
+      }
     }
 }
 

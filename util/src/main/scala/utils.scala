@@ -17,18 +17,13 @@ object IO {
     InputStream,
     InputStreamReader
   }
+  import scala.util.control.Exception.catching
   
   type Resource = { def close(): Unit }
   
   /** Control a closeable resource. */
-  def loan[A, R <: Resource](r: R)(op: R => A): Either[Exception, A] =
-    try {
-      Right(op(r))
-    } catch {
-      case e: Exception => Left(e)
-    } finally {
-      r.close()
-    }
+  def loan[A, R <: Resource](r: R)(op: R => A): Either[Throwable, A] =
+    catching(classOf[Exception]) andFinally(r.close()) either(op(r))
   
   /**
    * Consume input until the predicate returns true, blocking on each read.

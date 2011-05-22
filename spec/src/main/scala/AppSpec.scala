@@ -1,17 +1,15 @@
 package highchair.specs
 
-import highchair.util.DevServer
-import org.specs._
-
-class AppStoreSpec(war: String) extends Specification {
+trait AppSpec extends org.specs.Specification {
   
-  def configureDevServer = DevServer()
+  def warDirectory: String
+  def configureDevServer = highchair.util.DevServer()
   
   val devServer = configureDevServer
   
   /* Deploy a GAE web app to a DevServer. */
   doBeforeSpec {
-    devServer.start(war)
+    devServer.start(warDirectory)
   }
   
   /* Shutdown the DevServer. */

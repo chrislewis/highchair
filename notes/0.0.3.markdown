@@ -2,27 +2,27 @@ Highchair Remote
 ----------------
 As of Google App Engine SDK version 1.4.3, it is possible to interface
 with App Engine services from any application through the
-[Remote API library][gae_remote].
+[Remote API][gae_remote]. With highchair remote you can bind to a remote
+applicaiton by providing the application id and the credentials of an
+admin user for that application.
 
     val remote = Remote("localhost" -> 8080, "user@foo.com" -> "foopass")
 
-With a ``Remote`` instance, you can interact with various App Engine services.
+With a ``Remote`` instance, you can interact with various App Engine services
+through blocks scoped to a remote application.
 
     remote {
       val ds = DatastoreServiceFactory.getDatastoreService
       ds.put(new Entity("RemoteEntity"))
     }
 
-``Remote``s allow you to scope remote calls such that when the block
-terminates, subsequent service calls will resume local bindings. Because
-it's a [loaner](http://scala.sygneca.com/patterns/loan), you don't need to worry about failures wreaking havoc;
-cleanup happens automatically in all scenarios.
+``Remote`` blocks are scoped such that when then block terminates, subsequent
+service calls will resume local bindings.
 
-Calls to ``remote`` result in an ``Either[Throwable, A]``, where ``A`` is
-the result type of the block. This allows you to sanely retrieve results
-(if you want them) on success, as well as deal with any failures.
+See the [wiki page][remote_wiki] page for more information.
 
 [gae_remote]: http://code.google.com/appengine/docs/java/tools/remoteapi.html
+[remote_wiki]: https://github.com/chrislewis/highchair/wiki/Remote
 
 
 Highchair Util and Spec
@@ -41,7 +41,7 @@ With a `DevServer`, you can quickly start and deploy an app:
 The spec module contains a new base spec for integration tests against a
 local app:
 
-    class MyGAESpec extends AppStoreSpec(pathToWar) { /* specs here */ }
+    class MyGAESpec extends highchair.specs.AppSpec { /* specs here */ }
 
 Breaking Changes
 ----------------

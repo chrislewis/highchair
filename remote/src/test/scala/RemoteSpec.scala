@@ -10,23 +10,33 @@ import highchair.remote.Remote
 
 class RemoteSpec extends Specification {
   
-  val helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig)
   val remote = Remote("localhost" -> 8080, "user@foo.com" -> "foopass")
   val invalidRemote = Remote("localhost" -> 80, "user@foo.com" -> "foopass")
   
-  "Remote datastore save" should {
-    "succeed" in {
-      val remoteSave = remote {
-        DSF.getDatastoreService.put(new Entity("RemoteEntity"))
-      }
-      remoteSave fold (_ => "fail", _.getKind) must_== "RemoteEntity"
+  val helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig)
+  val doPersist = () => DSF.getDatastoreService.put(new Entity("RemoteEntity"))
+  
+  "A valid Remote should" should {
+    "persist to a remote datastore" in {
+      remote {
+        doPersist()
+      } fold (_ => "fail", _.getKind) must_== "RemoteEntity"
     }
     
-    "fail" in {
-      val remoteSave = invalidRemote {
-        DSF.getDatastoreService.put(new Entity("RemoteEntity"))
-      }
-      remoteSave fold (_ => "fail", _.getKind) must_== "fail"
+    "scope remote operations" in {
+      remote {
+        doPersist()
+      } fold (_ => "fail", _.getKind) must_== "RemoteEntity"
+      
+      doPersist() must throwA[NullPointerException]
+    }
+  }
+  
+  "An invalid Remote should " in {
+    "fail to persist to a remote datastore" in {
+      invalidRemote {
+        doPersist()
+      } fold (_ => "fail", _.getKind) must_== "fail"
     }
   }
   
