@@ -72,12 +72,12 @@ See the [specs](http://github.com/chrislewis/highchair/tree/master/datastore/src
 
 ## Install
 
-Highchair requires Scala 2.8 and is cross-built for versions 2.8.0 and 2.8.1. Highchair artifacts are published using
+Highchair requires (at least) Scala 2.8 and is cross-built for versions 2.8.0, 2.8.1 and 2.9.0. Highchair artifacts are published using
 the excellent built tool [sbt](http://code.google.com/p/simple-build-tool/).
 
 ### sbt
 
-    val h_datastore = "net.thegodcode" %% "highchair-datastore" % "0.0.2"
+    val h_datastore = "net.thegodcode" %% "highchair-datastore" % "0.0.3"
 
 ### maven, ivy
 
