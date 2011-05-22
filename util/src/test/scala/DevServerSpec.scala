@@ -20,8 +20,7 @@ class DevServerSpec extends Specification {
   
   "a DevServer should serve the guestbook app" in {
     Http x(host as_str) {
-      case (s, ss, sss, out) => Some(s -> out().contains("guestbook.jsp"))
-      case _ => None
+      case (s, _, _, out) => Some(s -> out().contains("guestbook.jsp"))
     } must_== Some(200, true)
   }
   

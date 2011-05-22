@@ -11,7 +11,7 @@ import scala.util.control.Exception.catching
  * @see http://code.google.com/appengine/docs/java/tools/remoteapi.html
  * @author Chris Lewis <chris@thegodcode.net>
  */
-case class Remote(server: (String, Int), user: (String, String)) {
+class Remote(server: (String, Int), user: (String, String)) {
   private val (srvr, prt) = server
   private val (usr, psswd) = user
   private val options =
@@ -31,4 +31,9 @@ case class Remote(server: (String, Int), user: (String, String)) {
 }
 
 
-
+object Remote {
+  lazy val local = Remote("localhost" -> 8080, "admin" -> "password")
+  
+  def apply(server: (String, Int), user: (String, String)) =
+    new Remote(server, user)
+}
