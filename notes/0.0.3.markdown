@@ -44,7 +44,7 @@ With a `DevServer`, you can quickly start and deploy an app:
     server.start(pathToWar)
     
 The spec module now contains a new base spec for integration tests against a
-local app. By supply the path to the war directory, `AppSepc` manages the
+local app. By providing the path to the war directory, `AppSepc` manages the
 startup and shutdown of the application under test. All you have to do is
 provide the war path and the specs:
 
