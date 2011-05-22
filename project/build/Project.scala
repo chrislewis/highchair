@@ -50,10 +50,10 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   /* Additional repos. */
   val gae_repo = "AppEngine" at "http://maven-gae-plugin.googlecode.com/svn/repository/"
   /* Without this, publishing fails to resolve interdependent modules of the project. */
-  val publish_repo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+  val publish_repo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
   
   override def managedStyle = ManagedStyle.Maven
-  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
+  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
   Credentials(Path.userHome / ".ivy2" / ".credentials", log)
   
   /* Github creds (gh-issues). */
