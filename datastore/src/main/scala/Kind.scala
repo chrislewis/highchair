@@ -11,7 +11,7 @@ import com.google.appengine.api.datastore.{
 }
 
 /* Base trait for a "schema" of some kind E. */
-abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
+abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImplicits {
   
   lazy val reflector = new highchair.poso.Reflector[E]
   lazy val c = findConstructor
@@ -83,23 +83,6 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
     c.newInstance(args:_*).asInstanceOf[E]
   }
   
-  /* Set of implicits yielding properties for our mapped primitives. */
-  implicit object boolProp extends BooleanProp
-  implicit object intProp extends IntProp
-  implicit object longProp extends LongProp
-  implicit object floatProp extends FloatProp
-  implicit object doubleProp extends DoubleProp
-  implicit object stringProp extends StringProp
-  implicit object dateProp extends DateProp
-  implicit object jodaDateTimeProp extends DateTimeProp
-  implicit object keyProp extends KeyProp
-  implicit object textProp extends TextProp
-
-  implicit def type2option[A](implicit prop: Prop[A]): OptionalProp[A] =
-    new OptionalProp(prop)
-    
-  implicit def type2list[A](implicit prop: Prop[A]): ListProp[A] = new ListProp(prop)
-
   implicit def pm2m(pm: PropertyMapping[E, _]) = new Mapping(pm)
   
   /* Function which, given a type A, will yield an appropriate Prop instance via an implicit. */ 
