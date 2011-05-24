@@ -39,13 +39,18 @@ class StringProp extends BaseProp("")
 class DateProp extends BaseProp(new java.util.Date)
 class KeyProp extends BaseProp[Key](error("No suitable default value!"))
 
+class DateTimeProp extends Prop[org.joda.time.DateTime] {
+  def dflt = new org.joda.time.DateTime
+  override def toStoredType(value: org.joda.time.DateTime): Any = value.toDate
+  override def fromStoredType(st: Any) = new org.joda.time.DateTime(st.asInstanceOf[java.util.Date])
+}
+
 // Properties for appenine datastore Text
 class TextProp extends BaseProp(new Text(""))
 
 /** Property allowing any mapped property A to be mapped to Option[A]. */
 class OptionalProp[A](val wrapped: Prop[A]) extends BaseProp[Option[A]](None) {
   override def toStoredType(value: Option[A]) = value.getOrElse(null)
-  
   override def fromStoredType(st: Any) = Some(wrapped.fromStoredType(st))
 }
 

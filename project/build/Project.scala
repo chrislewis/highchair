@@ -35,6 +35,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   lazy val datastore = project("datastore", "Highchair Datastore", new HighchairModule(_) {
     override def deliverProjectDependencies = 
       super.deliverProjectDependencies.toList - spec.projectID ++ Seq(spec.projectID % "test")
+    val joda = "joda-time" % "joda-time" % "1.6.2"
   }, spec)
   lazy val spec = project("spec", "Highchair Spec", new HighchairModule(_) {
     lazy val specs = specsDep

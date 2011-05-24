@@ -2,6 +2,7 @@ package highchair.tests
 
 import highchair._
 import java.util.Date
+import org.joda.time.DateTime
 import com.google.appengine.api.datastore.{Key, Text}
 
 case class Person(
@@ -56,11 +57,13 @@ object ContactInfo extends Kind[ContactInfo] {
 case class Note(
   val key: Option[Key],
   val title: String,
-  val details: Text
+  val details: Text,
+  val created: DateTime
 ) extends Entity[Note]
 
 object Note extends Kind[Note] {
   val title = property[String]("title")
   val details = property[Text]("details")
-  val * = title ~ details 
+  val created = property[DateTime]("created")
+  val * = title ~ details ~ created 
 }

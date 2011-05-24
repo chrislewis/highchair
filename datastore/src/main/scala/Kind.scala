@@ -91,8 +91,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) {
   implicit object doubleProp extends DoubleProp
   implicit object stringProp extends StringProp
   implicit object dateProp extends DateProp
+  implicit object jodaDateTimeProp extends DateTimeProp
   implicit object keyProp extends KeyProp
-  
   implicit object textProp extends TextProp
 
   implicit def type2option[A](implicit prop: Prop[A]): OptionalProp[A] =
