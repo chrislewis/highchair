@@ -2,6 +2,8 @@
 
 Highchair is an experimental library for persisting scala objects to the Google Datastore.
 
+Please use the [discussion group](http://groups.google.com/group/highchair-user) for questions, suggestions, and requests.
+
 ## Goals
 
 * Type-safety
