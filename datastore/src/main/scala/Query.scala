@@ -35,7 +35,7 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   }
     
   // TODO better default + clean up
-  def fetch(offset: Int = 0, limit: Int = 500)(implicit dss: DatastoreService) = {
+  def fetch(limit: Int = 500, offset: Int = 0)(implicit dss: DatastoreService) = {
     val opts = FetchOptions.Builder withOffset(offset) limit(limit)
     collection.JavaConversions.asIterable(dss.prepare(rawQuery).asIterable(opts)) map kind.entity2Object
   }
