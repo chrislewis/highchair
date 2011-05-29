@@ -67,12 +67,16 @@ class ListProp[A](val wrapped: Prop[A]) extends BaseProp[List[A]](Nil) {
 }
 
 /** Type-safe mapping for a property A of an entity E. */
-class PropertyMapping[E, A : Prop](val name: String, val clazz: Class[_]) {
+class PropertyMapping[E <: highchair.datastore.Entity[E], A : Prop](
+  val kind: highchair.datastore.Kind[E],
+  val name: String,
+  val clazz: Class[_])
+  extends PropertyFilter[E, A] {
   val prop = implicitly[Prop[A]]
 }
 
 /** Aggregates mapped properties for an entity E. */
-class Mapping[E](val mappings: Map[String, PropertyMapping[E, _]]) {
+class Mapping[E <: highchair.datastore.Entity[E]](val mappings: Map[String, PropertyMapping[E, _]]) {
   def this(pm: PropertyMapping[E, _]) = this(collection.immutable.ListMap(pm.name -> pm))
   
   def ~(pm: PropertyMapping[E, _]) = new Mapping(mappings + (pm.name -> pm))

@@ -1,7 +1,6 @@
 package highchair.tests
 
 import com.google.appengine.api.datastore.KeyFactory
-import highchair.datastore.meta.FilterOps._
 import org.specs._
 
 class KeySpec extends highchair.specs.DataStoreSpec {
