@@ -1,6 +1,6 @@
 package highchair.tests
 
-import highchair.meta.FilterOps._
+import highchair.datastore.meta.FilterOps._
 import org.specs._
 
 class RelationSpec extends highchair.specs.DataStoreSpec {

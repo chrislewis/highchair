@@ -1,4 +1,4 @@
-package highchair.meta
+package highchair.datastore.meta
 
 import com.google.appengine.api.datastore.{Query => GQuery}
 import GQuery.{FilterOperator => FO, SortDirection => SD}
@@ -35,6 +35,7 @@ sealed class PropertyFilter[E, A](val property: PropertyMapping[E, A]) {
   def in  (value: A*) = multi(FO.IN, value:_*)
 }
 
+@deprecated("use datastore.Query", "0.0.4")
 case class Query[E](val filters: List[Filter[E, _]], val sorts: List[SortDirection[E, _]]) {
   def &&(f: Filter[E, _]) = Query(f :: filters, sorts)
   def sort(s: SortDirection[E, _]) = Query(filters, s :: sorts)

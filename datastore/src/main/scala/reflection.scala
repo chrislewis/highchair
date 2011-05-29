@@ -1,4 +1,4 @@
-package highchair.poso
+package highchair.datastore.poso
 
 import java.lang.reflect.{Constructor, Field, Type}
 

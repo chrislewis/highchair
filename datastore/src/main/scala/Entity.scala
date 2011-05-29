@@ -1,4 +1,4 @@
-package highchair
+package highchair.datastore
 
 import com.google.appengine.api.datastore.Key
 

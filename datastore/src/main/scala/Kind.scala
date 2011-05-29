@@ -1,6 +1,7 @@
-package highchair
+package highchair.datastore
 
 import meta._
+import meta.{ Query => Query3 }
 import com.google.appengine.api.datastore.{
   DatastoreService,
   Entity => GEntity,
@@ -13,7 +14,7 @@ import com.google.appengine.api.datastore.{
 /* Base trait for a "schema" of some kind E. */
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImplicits {
   
-  lazy val reflector = new highchair.poso.Reflector[E]
+  lazy val reflector = new poso.Reflector[E]
   lazy val c = findConstructor
   
   def * : Mapping[E]
@@ -40,7 +41,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
     entity2Object(entity)
   }
   
-  def find(query: Query[E])(implicit dss: DatastoreService) = {
+  def find(query: Query3[E])(implicit dss: DatastoreService) = {
     val q = bindParams(new GQuery(reflector.simpleName), (query.filters ::: query.sorts):_*)
     collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
   }
@@ -59,7 +60,12 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
   
   def bindParams(q: GQuery, params: Filter[E, _]*) =
     (q /: params) { (q, f) => f bind q }
-    
+  
+  /**/
+  def where(f: this.type => highchair.datastore.Query[E, this.type]) =
+    f(this)
+  /**/
+  
   private def findConstructor = 
     reflector.findConstructor { c =>
       val p_types = c.getParameterTypes.toList

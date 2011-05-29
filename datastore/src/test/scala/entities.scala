@@ -1,6 +1,6 @@
 package highchair.tests
 
-import highchair._
+import highchair.datastore._
 import java.util.Date
 import org.joda.time.DateTime
 import com.google.appengine.api.datastore.{Key, Text}

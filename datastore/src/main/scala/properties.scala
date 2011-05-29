@@ -1,4 +1,4 @@
-package highchair.meta
+package highchair.datastore.meta
 
 import com.google.appengine.api.datastore.{
   Entity,
