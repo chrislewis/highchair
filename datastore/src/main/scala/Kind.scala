@@ -62,8 +62,10 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
     (q /: params) { (q, f) => f bind q }
   
   /**/
-  def where(f: this.type => highchair.datastore.Query[E, this.type]) =
-    f(this)
+  def where[A](f: this.type => meta.Filter[E, A]) =
+    highchair.datastore.Query[E, this.type](this, f(this) :: Nil, Nil)
+  
+  implicit def Kind2Query(k: this.type) = Query[E, this.type](this, Nil, Nil)
   /**/
   
   private def findConstructor = 
@@ -93,7 +95,9 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
   
   /* Function which, given a type A, will yield an appropriate Prop instance via an implicit. */ 
   def property[A](name: String)(implicit p: Prop[A], m: Manifest[A]) = {
-    new PropertyMapping[E, A](name, m.erasure)
+    new PropertyMapping[E, A](this, name, m.erasure)
   }
   
+  @deprecated("use datastore.query", "0.0.4")
+  implicit def Filter2Query[E <: highchair.datastore.Entity[E]](f: Filter[E, _]) = Query3(List(f), Nil)
 }
