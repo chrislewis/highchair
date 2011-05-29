@@ -12,7 +12,7 @@ import com.google.appengine.api.datastore.{
 case class Query[E <: Entity[E], K <: Kind[E]](
   kind:     K,
   filters:  List[Filter[E, _]],
-  sorts:    List[SortDirection[E, _]]) {
+  sorts:    List[Sort[E, _]]) {
   
   def and(f: K => Query[E, K]) = f(kind) match {
     case Query(_, fs, ss) =>
