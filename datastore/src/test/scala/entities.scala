@@ -23,6 +23,13 @@ object Person extends Kind[Person] {
   val birthday = property[Date]("birthday")
   val aliases = property[List[String]]("aliases")
   val * = firstName ~ middleName ~ lastName ~ age ~ birthday ~ aliases
+  
+  /* Test set. */
+  val testSet = List(
+    Person(None, "Erin", Some("Pate"), "Lewis", 31, new Date, Nil),
+    Person(None, "Chris", Some("Aaron"), "Lewis", 29, new Date, Nil),
+    Person(None, "Garrett", Some("Donald"), "Lewis", 60, new Date, List("Pop"))
+  )
 }
 
 

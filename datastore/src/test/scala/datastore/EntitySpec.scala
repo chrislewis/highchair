@@ -1,23 +1,14 @@
 package highchair.datastore
 
 import highchair.tests._
-
 import org.specs._
-
 import java.util.Date
 
 class EntitySpec extends highchair.specs.DataStoreSpec {
   
-  /* Test set. */
-  val people = List(
-    Person(None, "Erin", Some("Pate"), "Lewis", 31, new Date, Nil),
-    Person(None, "Chris", Some("Aaron"), "Lewis", 29, new Date, Nil),
-    Person(None, "Garrett", Some("Donald"), "Lewis", 60, new Date, List("Pop"))
-  )
-  
   doBeforeSpec {
     super.doBeforeSpec()
-    people foreach Person.put
+    Person.testSet foreach Person.put
   }
   
   "People queries" should {
