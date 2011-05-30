@@ -4,7 +4,7 @@ Highchair is an experimental library for persisting scala objects to the Google 
 
 Please use the [discussion group](http://groups.google.com/group/highchair-user) for questions, suggestions, and requests.
 
-## Highchair Modules
+## Modules
 
 ### Datastore
 A module providing an idiomatic API for persiting objects to the Google Datastore, and for executing type-safe queries:
@@ -12,6 +12,7 @@ A module providing an idiomatic API for persiting objects to the Google Datastor
     Person where (_.name is "Chris")
       and (_.middleName is Some("Aaron")) fetch (limit = 100)
       
+
 ### Remote
 Remote wraps the [Remote API](http://code.google.com/appengine/docs/java/tools/remoteapi.html),
 which allows any java application to transparently access the App Engine services of a given application:
@@ -19,6 +20,7 @@ which allows any java application to transparently access the App Engine service
     remote {
       Person.put(Person(None, "Chris", "Aaron", "Lewis", 30))
     }
+
 
 ### Util
 Util allows you to programatically launch and shutdown a local GAE application:
@@ -28,10 +30,11 @@ Util allows you to programatically launch and shutdown a local GAE application:
     // ... integration tests ...
     server.stop()
 
+
 ## Install
 
 Highchair requires (at least) Scala 2.8 and is cross-built for versions 2.8.0, 2.8.1 and 2.9.0. Highchair artifacts are published using
-the excellent built tool [sbt](http://code.google.com/p/simple-build-tool/).
+the excellent [sbt](http://code.google.com/p/simple-build-tool/).
 
 ### sbt
 
