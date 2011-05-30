@@ -4,73 +4,29 @@ Highchair is an experimental library for persisting scala objects to the Google 
 
 Please use the [discussion group](http://groups.google.com/group/highchair-user) for questions, suggestions, and requests.
 
-## Goals
+## Highchair Modules
 
-* Type-safety
-* Simplicity
-* Immutability
+### Datastore
+A module providing an idiomatic API for persiting objects to the Google Datastore, and for executing type-safe queries:
 
-## Defining Persistent Objects
-
-Persistent objects are defined as case classes which mixin the Entity trait. For query logic, mix the Kind trait
-into a dedicated class. The companion object is a natural choice. 
-Note: Highchair currently requires persistent objects to recieve an Option[Key] as the first constructor argument.
-
-    import highchair._
-    import com.google.appengine.api.datastore.Key
-    
-    case class Person(
-      val key: Option[Key],
-      val firstName: String,
-      val middleName: Option[String],
-      val lastName: String,
-      val age: Int
-    ) extends Entity[Person]
-    
-    object Person extends Kind[Person] {
-      val firstName   = property[String]("firstName")
-      val middleName  = property[Option[String]]("middleName")
-      val lastName    = property[String]("lastName")
-      val age         = property[Int]("age")
-      val * = firstName ~ middleName ~ lastName ~ age
-    }
-    
-## Working With Persistent Data
-
-The Kind trait defines the core persistence logic for entities. Operations against the datastore are carried out
-using the [low-level API](http://code.google.com/appengine/docs/java/javadoc/com/google/appengine/api/datastore/package-summary.html).
-For maximum flexibility, a Kind recieves a connection to the datastore as an implicit argument.
-    
-    import javax.servlet._
-    import javax.servlet.http._
-    
-    import com.google.appengine.api.datastore.DatastoreServiceFactory
-    
-    class HighchairDemoServlet extends HttpServlet {
+    Person where (_.name is "Chris")
+      and (_.middleName is Some("Aaron")) fetch (limit = 100)
       
-      /* An implicit in scope of this servlet. */
-      implicit val dss = DatastoreServiceFactory.getDatastoreService
-    
-      override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
-        /* A transient entity. */
-        val transient_chris = Person(None, "Chris", Some("Aaron"), "Lewis", 29)
-        
-        /* 
-         * Put a transient entity and receive a persistent one.
-         * Note that the transient is still transient.
-         */
-        val persistent_chris = Person.put(transient_chris)
-        
-        /* Update and put the persistent entity. */
-        val older_chris = Person.put(persistent_chris.copy(age = 30))
-        
-        res.getWriter.print(older_chris.age)
-      }
-      
+### Remote
+Remote wraps the [Remote API](http://code.google.com/appengine/docs/java/tools/remoteapi.html),
+which allows any java application to transparently access the App Engine services of a given application:
+
+    remote {
+      Person.put(Person(None, "Chris", "Aaron", "Lewis", 30))
     }
 
+### Util
+Util allows you to programatically launch and shutdown a local GAE application:
 
-See the [specs](http://github.com/chrislewis/highchair/tree/master/datastore/src/test/scala) for more examples.
+    val server = DevServer()
+    server.start(guestbookApp)
+    // ... integration tests ...
+    server.stop()
 
 ## Install
 
@@ -79,7 +35,7 @@ the excellent built tool [sbt](http://code.google.com/p/simple-build-tool/).
 
 ### sbt
 
-    val h_datastore = "net.thegodcode" %% "highchair-datastore" % "0.0.3"
+    val h_datastore = "net.thegodcode" %% "highchair-datastore" % "0.0.4-SNAPSHOT"
 
 ### maven, ivy
 
