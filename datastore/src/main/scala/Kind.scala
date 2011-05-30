@@ -65,9 +65,10 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
   
   /**/
   def where[A](f: this.type => meta.Filter[E, A]) =
-    highchair.datastore.Query[E, this.type](this, f(this) :: Nil, Nil)
+    Query[E, this.type](this, f(this) :: Nil, Nil)
   
-  implicit def Kind2Query(k: this.type) = Query[E, this.type](this, Nil, Nil)
+  implicit def Kind2Query[K <: Kind[E]](k: K) =
+    Query[E, this.type](this, Nil, Nil)
   /**/
   
   private def findConstructor = 

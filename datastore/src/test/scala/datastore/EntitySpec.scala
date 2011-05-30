@@ -49,10 +49,10 @@ class EntitySpec extends highchair.specs.DataStoreSpec {
       Person where (_.lastName is "Jones") fetch() must beEmpty
     }
     "fetch all" in {
-      (Person.fetch() size) must_== 3
+      (Person fetch() size) must_== 3
     }
     "fetch all with limit 2" in {
-      (Person.fetch(limit = 2) size) must_== 2
+      (Person fetch(limit = 2) size) must_== 2
     }
   }
 }
