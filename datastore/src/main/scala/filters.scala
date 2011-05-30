@@ -50,7 +50,7 @@ sealed abstract class Sort[E <: Entity[E], A](val p: PropertyMapping[E, A], val 
 case class Asc[E <: Entity[E], A](property: PropertyMapping[E, A]) extends Sort(property, SD.ASCENDING)
 case class Desc[E <: Entity[E], A](property: PropertyMapping[E, A]) extends Sort(property, SD.DESCENDING)
 
-@deprecated("use datastore.Query", "0.0.4")
+@deprecated("use datastore.Query")
 case class Query[E <: Entity[E]](filters: List[Filter[E, _]], sorts: List[Sort[E, _]]) {
   def &&(f: Filter[E, _]) = Query(f :: filters, sorts)
   def sort(s: Sort[E, _]) = Query(filters, s :: sorts)

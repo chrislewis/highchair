@@ -15,6 +15,7 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   filters:  List[Filter[E, _]],
   sorts:    List[Sort[E, _]]) {
   
+  def baseQuery = new GQuery(kind.reflector.simpleName)
   /** Construct a native datastore query. */
   def rawQuery = 
     (baseQuery /: (filters ::: sorts)) { (q, f) => f bind q }
@@ -28,8 +29,7 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   def orderDesc(f: K => PropertyMapping[E, _]) =
     copy(sorts = Desc(f(kind)) :: sorts)
   
-  private def baseQuery = new GQuery(kind.reflector.simpleName)
-
+  
   /** Fetch a single record matching this query. */
   def fetchOne()(implicit dss: DatastoreService) = 
     fetch() headOption
@@ -40,8 +40,10 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   }
   /** Fetch entities matching this query, optionally providing limits and/or offsets. */
   // TODO better default; clean up; what happens when offset extends the bounds?
-  def fetch(limit: Int = 500, offset: Int = 0)(implicit dss: DatastoreService) = {
-    val opts = FetchOptions.Builder withOffset(offset) limit(limit)
+  def fetch(limit: Int = 500, skip: Int = 0)(implicit dss: DatastoreService) = {
+    val opts = FetchOptions.Builder withOffset(skip) limit(limit)
     collection.JavaConversions.asIterable(dss.prepare(rawQuery).asIterable(opts)) map kind.entity2Object
   }
+  
+  
 }
