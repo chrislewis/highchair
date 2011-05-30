@@ -4,6 +4,7 @@ import meta._
 
 import com.google.appengine.api.datastore.{
   DatastoreService,
+  AsyncDatastoreService,
   FetchOptions,
   Key,
   Query => GQuery
@@ -43,5 +44,4 @@ case class Query[E <: Entity[E], K <: Kind[E]](
     val opts = FetchOptions.Builder withOffset(offset) limit(limit)
     collection.JavaConversions.asIterable(dss.prepare(rawQuery).asIterable(opts)) map kind.entity2Object
   }
-  
 }
