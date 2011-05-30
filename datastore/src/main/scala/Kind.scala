@@ -41,6 +41,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
     entity2Object(entity)
   }
   
+  @deprecated("use Kind#where instead", "0.0.4")
   def find(query: Query3[E])(implicit dss: DatastoreService) = {
     val q = bindParams(new GQuery(reflector.simpleName), (query.filters ::: query.sorts):_*)
     collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
@@ -58,6 +59,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
       case e: EntityNotFoundException => None
     }
   
+  @deprecated("use datastore.query", "0.0.4")
   def bindParams(q: GQuery, params: Filter[E, _]*) =
     (q /: params) { (q, f) => f bind q }
   
