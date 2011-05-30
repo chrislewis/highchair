@@ -5,6 +5,7 @@ import com.google.appengine.api.datastore.{
   Text,
   Key
 }
+import com.google.appengine.api.blobstore.BlobKey
 
 /* A mapping from a Datastore type to a scala type, with methods to get from/set on an Entity. */
 sealed trait Prop[A] {
@@ -38,6 +39,7 @@ class DoubleProp extends BaseProp(0d)
 class StringProp extends BaseProp("")
 class DateProp extends BaseProp(new java.util.Date)
 class KeyProp extends BaseProp[Key](error("No suitable default value!"))
+class BlobKeyProp extends BaseProp[BlobKey](error("No suitable default value!"))
 
 class DateTimeProp extends Prop[org.joda.time.DateTime] {
   def dflt = new org.joda.time.DateTime

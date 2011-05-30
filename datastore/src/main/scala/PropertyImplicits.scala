@@ -13,6 +13,7 @@ trait PropertyImplicits {
   implicit object dateProp extends DateProp
   implicit object jodaDateTimeProp extends DateTimeProp
   implicit object keyProp extends KeyProp
+  implicit object blobKeyProp extends BlobKeyProp
   implicit object textProp extends TextProp
 
   implicit def type2option[A](implicit prop: Prop[A]): OptionalProp[A] =
