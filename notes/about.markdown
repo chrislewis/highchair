@@ -1,4 +1,4 @@
-[highchair][hc] is a set of modules easing development with Google App Engine services.
+[highchair][hc] is a set of modules easing development with Google App Engine services and applications.
 
 * [highchair-datastore][hcd] provides a simple mapper and type-safe query DSL for working with the datastore
 * [highchair-remote][hcr] provides a remote construct for interacting GAE applications
