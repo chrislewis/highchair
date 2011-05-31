@@ -12,7 +12,7 @@ A module providing an idiomatic API for persiting objects to the Google Datastor
     Person where (_.name is "Chris")
       and (_.middleName is Some("Aaron")) fetch (limit = 100)
       
-[Datastore wiki]
+[wiki](https://github.com/chrislewis/highchair/wiki/Datastore)
 
 ### Remote
 Remote wraps the [Remote API](http://code.google.com/appengine/docs/java/tools/remoteapi.html),
@@ -22,7 +22,7 @@ which allows any java application to transparently access the App Engine service
       Person.put(Person(None, "Chris", "Aaron", "Lewis", 30))
     }
 
-[[Remote wiki]]
+[wiki](https://github.com/chrislewis/highchair/wiki/Remote)
 
 ### Util
 Util allows you to programatically launch and shutdown a local GAE application:
