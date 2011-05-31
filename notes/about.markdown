@@ -1,3 +1,8 @@
-[highchair][hc] is a library for persisting scala objects to the Google Datastore.
+[highchair][hc] is a set of modules easing development with Google App Engine services.
 
-[hc]: https://github.com/chrislewis/highchair
+* [highchair-datastore][hcd] provides a simple mapper and type-safe query DSL for working with the datastore
+* [highchair-remote][hcr] provides a remote construct for interacting GAE applications
+
+[hc]:  https://github.com/chrislewis/highchair
+[hcd]: https://github.com/chrislewis/highchair/wiki/Datastore
+[hcr]: https://github.com/chrislewis/highchair/wiki/Remote
