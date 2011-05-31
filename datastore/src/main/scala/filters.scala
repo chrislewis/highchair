@@ -46,7 +46,6 @@ sealed abstract class Sort[E <: Entity[E], A](val p: PropertyMapping[E, A], val 
   extends Filter[E, A] {
   def bind(q: GQuery) = q.addSort(p.name, direction)
 }
-
 case class Asc[E <: Entity[E], A](property: PropertyMapping[E, A]) extends Sort(property, SD.ASCENDING)
 case class Desc[E <: Entity[E], A](property: PropertyMapping[E, A]) extends Sort(property, SD.DESCENDING)
 

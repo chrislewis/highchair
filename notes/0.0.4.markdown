@@ -1,0 +1,8 @@
+* New query DSL based on the excellent [rogue library](https://github.com/foursquare/rogue)
+* Support for mapping Joda ``DateTime`` and Google ``BlobKey`` properties
+* Query support for limits, offsets, and efficient keys-only queries.
+
+* ``FilterOps`` deprecated (``PropertyMapping`` mixes in operations)
+* Connection object as a convenience for implicit ``DatastoreService`` instances
+
+[User group](http://groups.google.com/group/highchair-user) 
