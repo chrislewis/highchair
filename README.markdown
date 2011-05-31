@@ -12,6 +12,7 @@ A module providing an idiomatic API for persiting objects to the Google Datastor
     Person where (_.name is "Chris")
       and (_.middleName is Some("Aaron")) fetch (limit = 100)
       
+[[Datastore wiki]]
 
 ### Remote
 Remote wraps the [Remote API](http://code.google.com/appengine/docs/java/tools/remoteapi.html),
@@ -21,6 +22,7 @@ which allows any java application to transparently access the App Engine service
       Person.put(Person(None, "Chris", "Aaron", "Lewis", 30))
     }
 
+[[Remote wiki]]
 
 ### Util
 Util allows you to programatically launch and shutdown a local GAE application:
@@ -33,7 +35,7 @@ Util allows you to programatically launch and shutdown a local GAE application:
 
 ## Install
 
-Highchair requires (at least) Scala 2.8 and is cross-built for versions 2.8.0, 2.8.1 and 2.9.0. Highchair artifacts are published using
+Highchair requires at least Scala 2.8 and is cross-built for versions 2.8.0 - 2.9.0-1. Highchair artifacts are published using
 the excellent [sbt](http://code.google.com/p/simple-build-tool/).
 
 ### sbt
