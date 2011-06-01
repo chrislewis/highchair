@@ -1,8 +1,27 @@
-* New query DSL based on the excellent [rogue library](https://github.com/foursquare/rogue)
+New Query DSL
+-------------
+Version 0.0.4 introduces a new query DSL which intentionally resembles the excellent
+[rogue DSL][rogue]. The DSL has always been type-safe, but the new DSL more closely
+resembles the structure of a query while enabling you to store queries (or base
+queries) for reuse. Queries now look like this:
+
+    Person where (_.name is "Martin")
+      and (_.lastName in ("Odersky", "Jones"))
+      orderDesc (_.age)
+
+New Features in Datastore
+-------------------------
+* New query DSL based on the excellent [rogue DSL][rogue]
 * Support for mapping Joda ``DateTime`` and Google ``BlobKey`` properties
-* Query support for limits, offsets, and efficient keys-only queries.
+* Query support for limits, offsets, and efficient keys-only queries
+* ``Connection`` object as a convenience for implicit ``DatastoreService`` instances
+   
+Breaking Changes
+----------------
+Now that highchair is no longer focused only on the datastore, packages have been
+restructured to better support multiple modules. This means prior code won't work.
+If you are using highchair and such changes have troublesome effects on your project,
+bug me on [the list][group] and I'll be inclined to listen.
 
-* ``FilterOps`` deprecated (``PropertyMapping`` mixes in operations)
-* Connection object as a convenience for implicit ``DatastoreService`` instances
-
-[User group](http://groups.google.com/group/highchair-user) 
+[group]: http://groups.google.com/group/highchair-user 
+[rogue]: https://github.com/foursquare/rogue
