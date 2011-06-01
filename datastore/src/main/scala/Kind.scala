@@ -1,13 +1,11 @@
 package highchair.datastore
 
 import meta._
-import meta.{ Query => Query3 }
 import com.google.appengine.api.datastore.{
   DatastoreService,
   Entity => GEntity,
   Key,
   KeyFactory,
-  Query => GQuery,
   EntityNotFoundException
 }
 
@@ -41,12 +39,6 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
     entity2Object(entity)
   }
   
-  @deprecated("use Kind#where instead - since 0.0.4")
-  def find(query: Query3[E])(implicit dss: DatastoreService) = {
-    val q = bindParams(new GQuery(reflector.simpleName), (query.filters ::: query.sorts):_*)
-    collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map entity2Object
-  }
-  
   def delete(e: E)(implicit dss: DatastoreService) {
     e.key.map(dss.delete(_))
   }
@@ -58,10 +50,6 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
     } catch {
       case e: EntityNotFoundException => None
     }
-  
-  @deprecated("use datastore.query - since 0.0.4")
-  def bindParams(q: GQuery, params: Filter[E, _]*) =
-    (q /: params) { (q, f) => f bind q }
   
   /**/
   def where[A](f: this.type => meta.Filter[E, A]) =
@@ -100,7 +88,4 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
   def property[A](name: String)(implicit p: Prop[A], m: Manifest[A]) = {
     new PropertyMapping[E, A](this, name, m.erasure)
   }
-  
-  @deprecated("use datastore.query - since 0.0.4")
-  implicit def Filter2Query[E <: highchair.datastore.Entity[E]](f: Filter[E, _]) = Query3(List(f), Nil)
 }

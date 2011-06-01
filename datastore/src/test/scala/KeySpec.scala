@@ -8,9 +8,7 @@ class KeySpec extends highchair.specs.DataStoreSpec {
   val chris = Person(None, "Chris", Some("Aaron"), "Lewis", 29, new java.util.Date, Nil)
   
   val cleanup = () => 
-    Person.find {
-      Person.lastName === "Lewis"
-    } map Person.delete
+    Person where (_.lastName === "Lewis") fetch() map Person.delete
   
   "an Entity" should { doAfter { cleanup() }
     val saved = Person.put(chris)
@@ -30,9 +28,7 @@ class KeySpec extends highchair.specs.DataStoreSpec {
         } copy(age = 31)
       }
       
-      Person.find {
-        Person.lastName === "Lewis"
-      }.size must_== 1
+      (Person where (_.lastName is "Lewis") fetch() size) must_== 1
     }
   }
   
