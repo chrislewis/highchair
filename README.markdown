@@ -40,7 +40,7 @@ the excellent [sbt](http://code.google.com/p/simple-build-tool/).
 
 ### sbt
 
-    val h_datastore = "net.thegodcode" %% "highchair-datastore" % "0.0.4-SNAPSHOT"
+    val h_datastore = "net.thegodcode" %% "highchair-datastore" % "0.0.4"
 
 ### maven, ivy
 
