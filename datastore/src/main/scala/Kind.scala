@@ -10,7 +10,8 @@ import com.google.appengine.api.datastore.{
 }
 
 /* Base trait for a "schema" of some kind E. */
-abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImplicits {
+abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
+  extends PropertyImplicits {
   
   lazy val reflector = new poso.Reflector[E]
   lazy val c = findConstructor
@@ -43,7 +44,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E]) extends PropertyImp
     e.key.map(dss.delete(_))
   }
   
-  def get(key: Key)(implicit dss: DatastoreService) = 
+  def get(key: Key)(implicit dss: DatastoreService): Option[E] = 
     try {
       val _e = dss.get(key)
       Some(entity2Object(_e))
