@@ -16,9 +16,8 @@ sealed trait Filter[E, A] {
 private[meta] trait PropertyFilter[E <: Entity[E], A] { this: PropertyMapping[E, A] =>
   
   def single(filter: FO, value: A) = new Filter[E, A] {
-    def bind(q: GQuery) = {
+    def bind(q: GQuery) =
       q.addFilter(name, filter, prop.toStoredType(value))
-    }
   }
   
   def multi(filter: FO, value: A*) = new Filter[E, A] {

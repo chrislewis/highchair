@@ -19,5 +19,6 @@ trait PropertyImplicits {
   implicit def type2option[A](implicit prop: Prop[A]): OptionalProp[A] =
     new OptionalProp(prop)
     
-  implicit def type2list[A](implicit prop: Prop[A]): ListProp[A] = new ListProp(prop)
+  implicit def type2list[A](implicit prop: Prop[A]): ListProp[A] =
+    new ListProp(prop)
 }
