@@ -15,7 +15,7 @@ case class Person(
   val aliases: List[String]
 ) extends Entity[Person]
 
-object Person extends Kind[Person] {
+object Person extends Kind[Person] with Async[Person] {
   val firstName = property[String]("firstName")
   val middleName = property[Option[String]]("middleName")
   val lastName = property[String]("lastName")
