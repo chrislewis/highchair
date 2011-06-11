@@ -10,7 +10,8 @@ class KeySpec extends highchair.specs.DataStoreSpec {
   val cleanup = () => 
     Person where (_.lastName === "Lewis") fetch() map Person.delete
   
-  "an Entity" should { doAfter { cleanup() }
+  "an Entity" should {
+    doAfter { cleanup() }
     val saved = Person.put(chris)
     
     "have no initial key" in {

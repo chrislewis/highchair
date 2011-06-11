@@ -1,7 +1,7 @@
 package highchair.datastore
 
 import meta._
-
+import collection.JavaConversions.asIterable
 import com.google.appengine.api.datastore.{
   DatastoreService,
   FetchOptions,
@@ -26,7 +26,10 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   /** Sort descending on some property. TODO moar types */
   def orderDesc(f: K => PropertyMapping[E, _]) =
     copy(sorts = Desc(f(kind)) :: sorts)
-  
+  /**
+   * Generate a raw GQL query as a string. This requires an active API
+   * environment registered on the current thread.
+   */
   def toGQLString() = rawQuery.toString
   
   /** Fetch a single record matching this query. */
@@ -35,12 +38,12 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   /** Fetch only the keys of entities matching this query. More efficient. */
   def fetchKeys()(implicit dss: DatastoreService) = {
     val q = rawQuery setKeysOnly()
-    collection.JavaConversions.asIterable(dss.prepare(q).asIterable) map (_ getKey)
+    asIterable(dss.prepare(q).asIterable) map (_ getKey)
   }
   /** Fetch entities matching this query, optionally providing limits and/or offsets. */
   // TODO better default; clean up; what happens when offset extends the bounds?
   def fetch(limit: Int = 500, skip: Int = 0)(implicit dss: DatastoreService) = {
     val opts = FetchOptions.Builder withOffset(skip) limit(limit)
-    collection.JavaConversions.asIterable(dss.prepare(rawQuery).asIterable(opts)) map kind.entity2Object
+    asIterable(dss.prepare(rawQuery).asIterable(opts)) map kind.entity2Object
   }
 }
