@@ -27,6 +27,7 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   def orderDesc(f: K => PropertyMapping[E, _]) =
     copy(sorts = Desc(f(kind)) :: sorts)
   
+  def toGQLString() = rawQuery.toString
   
   /** Fetch a single record matching this query. */
   def fetchOne()(implicit dss: DatastoreService) = 

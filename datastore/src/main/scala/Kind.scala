@@ -19,13 +19,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   def * : Mapping[E]
   
   def keyFor(id: Long) = KeyFactory.createKey(reflector.simpleName, id)
-    
+
   def childOf(ancestor: Key): Key = new GEntity(reflector.simpleName, ancestor).getKey
-  
-  def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, _e: GEntity) = {
-    val a = reflector.field[A](e, pm.name)
-    pm.prop.asInstanceOf[Prop[A]].set(_e, pm.name, a)
-  }
   
   def put(e: E)(implicit dss: DatastoreService) = {
     val entity = e.key match {
@@ -59,6 +54,11 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   implicit def Kind2Query[K <: Kind[E]](k: K) =
     Query[E, this.type](this, Nil, Nil)
   /**/
+  
+  private def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, _e: GEntity) = {
+    val a = reflector.field[A](e, pm.name)
+    pm.prop.asInstanceOf[Prop[A]].set(_e, pm.name, a)
+  }
   
   private def findConstructor = 
     reflector.findConstructor { c =>

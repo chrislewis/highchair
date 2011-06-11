@@ -42,6 +42,7 @@ class EntitySpec extends highchair.specs.DataStoreSpec {
       ascAges must_== List(29, 31, 60)
     }
     "sort descending by age" in {
+      println(Person where (_.age > 20) orderDesc (_.age) toGQLString)
       val descAges = Person where (_.age > 20) orderDesc (_.age) fetch() map(_.age)
       descAges must_== List(60, 31, 29)
     }

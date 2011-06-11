@@ -4,15 +4,15 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   with posterous.Publish
   with gh.Issues {
   
-  val gae_version = "1.4.3"
+  val gae_version = "1.4.5"
   val dispatch_version = "0.8.1"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */
   trait GAEDatastoreDeps {
-    val gaeSdk      = "com.google.appengine" % "appengine-api-1.0-sdk" % gae_version % "provided"
-    val gaeStubs    = "com.google.appengine" % "appengine-api-stubs" % gae_version % "provided"
-    val gaeTest     = "com.google.appengine" % "appengine-testing" % gae_version % "provided"
-    val gaeApiLabs  = "com.google.appengine" % "appengine-api-labs" % gae_version % "provided"
+    val gaeSdk      = "com.google.appengine" % "appengine-api-1.0-sdk"  % gae_version % "provided"
+    val gaeStubs    = "com.google.appengine" % "appengine-api-stubs"    % gae_version % "provided"
+    val gaeTest     = "com.google.appengine" % "appengine-testing"      % gae_version % "provided"
+    val gaeApiLabs  = "com.google.appengine" % "appengine-api-labs"     % gae_version % "provided"
   }
   
   class HighchairModule(info: ProjectInfo) extends DefaultProject(info) with GAEDatastoreDeps {

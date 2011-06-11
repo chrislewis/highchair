@@ -2,7 +2,6 @@ package highchair.tests
 
 import highchair.datastore.meta._
 import org.specs._
-import java.util.Date
 import org.joda.time.DateTime
 import com.google.appengine.api.datastore.Text
 

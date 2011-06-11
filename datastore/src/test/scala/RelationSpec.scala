@@ -33,10 +33,6 @@ class RelationSpec extends highchair.specs.DataStoreSpec {
     "have its key aggregated in a User" in {  
       friendless.contactInfo must_== info.key
     }
-    
-    "have a User key as its ancestor" in {
-      info.ancestorKey must_== friendless.key
-    }
   }
   
   
