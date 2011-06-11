@@ -13,8 +13,6 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
     val gaeStubs    = "com.google.appengine" % "appengine-api-stubs" % gae_version % "provided"
     val gaeTest     = "com.google.appengine" % "appengine-testing" % gae_version % "provided"
     val gaeApiLabs  = "com.google.appengine" % "appengine-api-labs" % gae_version % "provided"
-    // testing ..
-    val scalap = "org.scala-lang" % "scalap" % crossScalaVersionString
   }
   
   class HighchairModule(info: ProjectInfo) extends DefaultProject(info) with GAEDatastoreDeps {
