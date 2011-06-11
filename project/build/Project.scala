@@ -4,7 +4,7 @@ class Highchair(info: ProjectInfo) extends ParentProject(info)
   with posterous.Publish
   with gh.Issues {
   
-  val gae_version = "1.4.5"
+  val gae_version = "1.4.3"
   val dispatch_version = "0.8.1"
   
   /* Minimal GAE artifacts (from AppEngine repo) for local datastore. */

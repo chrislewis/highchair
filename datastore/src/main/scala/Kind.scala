@@ -13,7 +13,7 @@ import com.google.appengine.api.datastore.{
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   extends PropertyImplicits {
   
-  lazy val reflector = new poso.Reflector[E]
+  val reflector = new poso.Reflector[E]
   lazy val c = findConstructor
   
   def * : Mapping[E]
@@ -24,12 +24,12 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   
   def put(e: E)(implicit dss: DatastoreService) = {
     val entity = e.key match {
-      case Some(k) => new GEntity(k)
-      case None => new GEntity(reflector.simpleName)
+      case Some(k)  => new GEntity(k)
+      case None     => new GEntity(reflector.simpleName)
     }
     
     val key = dss.put(*.mappings.foldLeft(entity) {
-      case (_e, pm) => putProp(pm._2, e, _e) 
+      case (ge, pm) => putProp(pm._2, e, ge) 
     })
     
     entity2Object(entity)
@@ -41,8 +41,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   
   def get(key: Key)(implicit dss: DatastoreService): Option[E] = 
     try {
-      val _e = dss.get(key)
-      Some(entity2Object(_e))
+      val ge = dss.get(key)
+      Some(entity2Object(ge))
     } catch {
       case e: EntityNotFoundException => None
     }
@@ -55,9 +55,9 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
     Query[E, this.type](this, Nil, Nil)
   /**/
   
-  private def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, _e: GEntity) = {
+  private def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, ge: GEntity) = {
     val a = reflector.field[A](e, pm.name)
-    pm.prop.asInstanceOf[Prop[A]].set(_e, pm.name, a)
+    pm.prop.asInstanceOf[Prop[A]].set(ge, pm.name, a)
   }
   
   private def findConstructor = 

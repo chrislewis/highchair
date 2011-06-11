@@ -1,6 +1,4 @@
-package highchair.datastore
-
-import meta._
+package highchair.datastore.meta
 
 trait PropertyImplicits {
   /* Set of implicits yielding properties for our mapped primitives. */
