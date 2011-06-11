@@ -31,33 +31,33 @@ sealed abstract class BaseProp[A](_dflt: => A) extends Prop[A] {
 }
 
 /* Properties for some core types. */
-class BooleanProp extends BaseProp(true)
-class IntProp extends BaseProp(0) { override def fromStoredType(st: Any) = st.toString.toInt }
-class LongProp extends BaseProp(0L)
-class FloatProp extends BaseProp(0f)
-class DoubleProp extends BaseProp(0d)
-class StringProp extends BaseProp("")
-class DateProp extends BaseProp(new java.util.Date)
-class KeyProp extends BaseProp[Key](error("No suitable default value!"))
-class BlobKeyProp extends BaseProp[BlobKey](error("No suitable default value!"))
+protected[meta] class BooleanProp   extends BaseProp(true)
+protected[meta] class IntProp       extends BaseProp(0) { override def fromStoredType(st: Any) = st.toString.toInt }
+protected[meta] class LongProp      extends BaseProp(0L)
+protected[meta] class FloatProp     extends BaseProp(0f)
+protected[meta] class DoubleProp    extends BaseProp(0d)
+protected[meta] class StringProp    extends BaseProp("")
+protected[meta] class KeyProp       extends BaseProp[Key](error("No suitable default value!"))
+protected[meta] class BlobKeyProp   extends BaseProp[BlobKey](error("No suitable default value!"))
 
-class DateTimeProp extends Prop[org.joda.time.DateTime] {
+protected[meta] class DateProp      extends BaseProp(new java.util.Date)
+protected[meta] class DateTimeProp  extends Prop[org.joda.time.DateTime] {
   def dflt = new org.joda.time.DateTime
   override def toStoredType(value: org.joda.time.DateTime): Any = value.toDate
   override def fromStoredType(st: Any) = new org.joda.time.DateTime(st.asInstanceOf[java.util.Date])
 }
 
-// Properties for appenine datastore Text
-class TextProp extends BaseProp(new Text(""))
+// Properties for appengine datastore Text
+protected[meta] class TextProp      extends BaseProp(new Text(""))
 
 /** Property allowing any mapped property A to be mapped to Option[A]. */
-class OptionalProp[A](val wrapped: Prop[A]) extends BaseProp[Option[A]](None) {
+protected[meta] class OptionalProp[A](val wrapped: Prop[A]) extends BaseProp[Option[A]](None) {
   override def toStoredType(value: Option[A]) = value.getOrElse(null)
   override def fromStoredType(st: Any) = Some(wrapped.fromStoredType(st))
 }
 
 /** Property allowing any mapped property A to be mapped to List[A]. */
-class ListProp[A](val wrapped: Prop[A]) extends BaseProp[List[A]](Nil) {
+protected[meta] class ListProp[A](val wrapped: Prop[A]) extends BaseProp[List[A]](Nil) {
   override def toStoredType(value: List[A]) = value match {
     case Nil => null
     case xs => scala.collection.JavaConversions.asList(xs)

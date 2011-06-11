@@ -86,7 +86,6 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   implicit def pm2m(pm: PropertyMapping[E, _]) = new Mapping(pm)
   
   /* Function which, given a type A, will yield an appropriate Prop instance via an implicit. */ 
-  def property[A](name: String)(implicit p: Prop[A], m: Manifest[A]) = {
+  def property[A](name: String)(implicit p: Prop[A], m: Manifest[A]) =
     new PropertyMapping[E, A](this, name, m.erasure)
-  }
 }

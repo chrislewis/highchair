@@ -35,13 +35,9 @@ class CorePropertiesSpec extends Specification with PropertyImplicits {
       val date = new Date()
       equiv(dateProp, date, date) mustBe true
     }
-    "map Date to and from java.util.Date" in {
-      val date = new Date()
-      equiv(dateProp, date, date) mustBe true
-    }
     "map DateTime to and from java.util.Date" in {
       val jodaDate = new DateTime()
-      equiv(jodaDateTimeProp, jodaDate, jodaDate.toDate) mustBe true
+      equiv(dateTimeProp, jodaDate, jodaDate.toDate) mustBe true
     }
     "map Text to and from Text" in {
       equiv(textProp, new Text("hi"), new Text("hi")) mustBe true
