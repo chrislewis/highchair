@@ -76,15 +76,3 @@ class PropertyMapping[E <: highchair.datastore.Entity[E], A : Prop](
   extends PropertyFilter[E, A] {
   val prop = implicitly[Prop[A]]
 }
-
-/** Aggregates mapped properties for an entity E. */
-class Mapping[E <: highchair.datastore.Entity[E]](val mappings: Map[String, PropertyMapping[E, _]]) {
-  def this(pm: PropertyMapping[E, _]) = this(collection.immutable.ListMap(pm.name -> pm))
-  
-  def ~(pm: PropertyMapping[E, _]) = new Mapping(mappings + (pm.name -> pm))
-  
-  lazy val classes: Seq[Class[_]] = mappings.map {
-    case (name, pm) => pm.clazz
-  } toList
-}
-

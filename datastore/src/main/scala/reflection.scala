@@ -16,12 +16,6 @@ class Reflector[A](implicit m: Manifest[A]) {
     
   def simpleName = clazz.getSimpleName
   
-  def does(params: Iterable[Class[_]], ctor: Iterable[Class[_]]) = 
-    params == ctor
-  
-  def constructorFor(params: Iterable[Class[_]]) =
-    constructors.find { c => does(c.getParameterTypes, params) }
-  
   def field[B](a: A, field: String) = fields(field).get(a).asInstanceOf[B]
   
   /* Find a suitable constructor using a test given the argument list. */

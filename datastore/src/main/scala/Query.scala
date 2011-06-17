@@ -17,15 +17,18 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   /** Construct a native datastore query. */
   def rawQuery = 
     (baseQuery /: (filters ::: sorts)) { (q, f) => f bind q }
+  
   /** Add a filter. */
   def and(f: K => Filter[E, _]) =
     copy(filters = f(kind) :: filters)
+  
   /** Sort ascending on some property. TODO moar types */
   def orderAsc(f: K => PropertyMapping[E, _]) =
     copy(sorts = Asc(f(kind)) :: sorts)
   /** Sort descending on some property. TODO moar types */
   def orderDesc(f: K => PropertyMapping[E, _]) =
     copy(sorts = Desc(f(kind)) :: sorts)
+  
   /**
    * Generate a raw GQL query as a string. This requires an active API
    * environment registered on the current thread.
