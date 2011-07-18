@@ -19,19 +19,21 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   def keyFor(id: Long) = KeyFactory.createKey(reflector.simpleName, id)
   
   def childOf(ancestor: Key): Key = new GEntity(reflector.simpleName, ancestor).getKey
+
+  private def entityKey(e: E) = e.key
   
   def put(e: E)(implicit dss: DatastoreService) = {
-    val entity = e.key.map(new GEntity(_)).getOrElse(new GEntity(reflector.simpleName))
+    val entity = entityKey(e).map(new GEntity(_)).getOrElse(new GEntity(reflector.simpleName))
     
     val key = dss.put(identityIdx.foldLeft(entity) {
-      case (ge, (_, pm)) => putProp(pm, e, ge)
+      case (ge, (_, pm)) => putProperty(pm, e, ge)
     })
     
     entity2Object(entity)
   }
   
   def delete(e: E)(implicit dss: DatastoreService) {
-    e.key.map(dss.delete(_))
+    entityKey(e).map(dss.delete(_))
   }
   
   def get(key: Key)(implicit dss: DatastoreService): Option[E] = 
@@ -46,13 +48,13 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   def where[A](f: this.type => meta.Filter[E, A]) =
     Query[E, this.type](this, f(this) :: Nil, Nil)
   
-  implicit def Kind2Query[K <: Kind[E]](k: K) =
+  implicit def kind2Query[K <: Kind[E]](k: K) =
     Query[E, this.type](this, Nil, Nil)
   /**/
   
-  private def putProp[A : Manifest](pm: PropertyMapping[E, _], e: E, ge: GEntity) = {
+  private def putProperty[A : Manifest](pm: PropertyMapping[E, _], e: E, ge: GEntity) = {
     val a = reflector.field[A](e, pm.name)
-    pm.prop.asInstanceOf[Prop[A]].set(ge, pm.name, a)
+    pm.prop.asInstanceOf[Property[A]].set(ge, pm.name, a)
   }
   
   private def findConstructor = 
@@ -78,16 +80,16 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
     ctor.newInstance(args:_*).asInstanceOf[E]
   }
   
-  /* Function which, given a type A, will yield an appropriate Prop instance via an implicit. */
-  def property[A](name: String)(implicit p: Prop[A], m: Manifest[A]) =
+  /* Function which, given a type A, will yield an appropriate Property instance via an implicit. */
+  def property[A](name: String)(implicit p: Property[A], m: Manifest[A]) =
     new AutoMapping[E, A](this, p, m.erasure)
   
-  def property[A](implicit p: Prop[A], m: Manifest[A]) =
+  def property[A](implicit p: Property[A], m: Manifest[A]) =
     new AutoMapping[E, A](this, p, m.erasure)
   
   implicit def autoToPropertyMapping[A](am: AutoMapping[E, A]) = 
-    identityIdx.get(am.hashCode)
-      .map(_.asInstanceOf[PropertyMapping[E, A]]) //FIXME avoid cast...
+    identityIdx.get(am)
+      .map(_.asInstanceOf[PropertyMapping[E, A]])
       .getOrElse(error("No mapping found!"))
   
   /* Order is significant! */
@@ -104,12 +106,13 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
       f -> f.get(this).asInstanceOf[AutoMapping[E, _]]
     }
   
-  private lazy val identityIdx: Map[Int, PropertyMapping[E, _]] = {
-    val pm = fieldMappings map { case (f, am) => am.hashCode -> am.as(f.getName) }
+  private lazy val identityIdx: Map[AutoMapping[E, _], PropertyMapping[E, _]] = {
+    val pm = fieldMappings map { case (f, am) => am -> am.as(f.getName) }
     Map(pm:_*)
   }
   
-  private lazy val ctorTag: Array[Class[_]] = fieldMappings.map(_._2.clazz)
+  private lazy val ctorTag: Array[Class[_]] =
+    fieldMappings.map(_._2.clazz)
   
   private lazy val ctorMappings: Array[PropertyMapping[E, _]] = 
     fieldMappings map { case (f, am) => am.as(f.getName) }
