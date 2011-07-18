@@ -21,16 +21,14 @@ trait Async[E <: Entity[E]] { this: Kind[E] =>
   lazy val async = new AsyncKind(this)
 }
 
-/** Pimp for adding asynchronous support to [[highchair.datastore.Kind]]. */
-class AsyncKindWrapper[E <: Entity[E]](k: Kind[E]) {
-  val async = new AsyncKind(k)
-}
-
 /**
  * Implicit enabler for pimped asynchronous support. This is convenient
  * if the [[highchair.datastore.Kind]] inquestion is out of your control, but
  * it's better to wire asynchrony into the object to avoid additional allocations.
  */
+class AsyncKindWrapper[E <: Entity[E]](k: Kind[E]) {
+  val async = new AsyncKind(k)
+}
 object Async {
   def apply[E <: Entity[E]](k: Kind[E]) = new AsyncKindWrapper(k)
   implicit def kindToAsync[E <: Entity[E]](k: Kind[E]) = Async(k)

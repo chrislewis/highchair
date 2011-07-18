@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.{
   EntityNotFoundException
 }
 
+
 /* Base trait for a "schema" of some kind E. */
 abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   extends PropertyImplicits {
@@ -19,8 +20,8 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   def keyFor(id: Long) = KeyFactory.createKey(reflector.simpleName, id)
   
   def childOf(ancestor: Key): Key = new GEntity(reflector.simpleName, ancestor).getKey
-
-  private def entityKey(e: E) = e.key
+  
+  private def entityKey(e: E) = e.key //TODO generalize
   
   def put(e: E)(implicit dss: DatastoreService) = {
     val entity = entityKey(e).map(new GEntity(_)).getOrElse(new GEntity(reflector.simpleName))
@@ -57,22 +58,6 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
     pm.prop.asInstanceOf[Property[A]].set(ge, pm.name, a)
   }
   
-  private def findConstructor = 
-    reflector.findConstructor { c =>
-      val p_types = c.getParameterTypes.toList
-      val g_types = c.getGenericParameterTypes.toList
-      p_types.containsSlice(ctorTag) &&
-      findKey(p_types.zip(g_types)).isDefined
-    } getOrElse error("No suitable constructor could be found!")
-  
-  private def findKey(types: Seq[(Class[_], java.lang.reflect.Type)]) = 
-    types.find {
-      case(c, t) =>
-        c == classOf[Option[_]] &&
-        t.isInstanceOf[java.lang.reflect.ParameterizedType] &&
-        t.asInstanceOf[java.lang.reflect.ParameterizedType].getActualTypeArguments.head == classOf[Key]
-    }
-  
   def entity2Object(e: GEntity) = {
     val args = Some(e.getKey) :: (ctorMappings map {
       case pm => pm.prop.get(e, pm.name)
@@ -91,17 +76,34 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
     identityIdx.get(am)
       .map(_.asInstanceOf[PropertyMapping[E, A]])
       .getOrElse(error("No mapping found!"))
+      
+  private def findConstructor = 
+    reflector.findConstructor { c =>
+      val p_types = c.getParameterTypes.toList
+      val g_types = c.getGenericParameterTypes.toList
+      p_types.containsSlice(ctorTag) &&
+      findKey(p_types.zip(g_types)).isDefined
+    } getOrElse error("No suitable constructor could be found!")
+  
+  private def findKey(types: Seq[(Class[_], java.lang.reflect.Type)]) = 
+    types.find {
+      case(c, t) =>
+        c == classOf[Option[_]] &&
+        t.isInstanceOf[java.lang.reflect.ParameterizedType] &&
+        t.asInstanceOf[java.lang.reflect.ParameterizedType].getActualTypeArguments.head == classOf[Key]
+    }
   
   /* Order is significant! */
   
-  private lazy val mappings = {
+  /* Auto-detected mappings (through reflective scanning). */
+  private lazy val mappings: Array[java.lang.reflect.Field] = {
     val mapped = this.getClass.getDeclaredFields
       .filter(_.getType == classOf[AutoMapping[E, _]])
     mapped.foreach(_.setAccessible(true))
     mapped
   }
   
-  private lazy val fieldMappings = 
+  private lazy val fieldMappings: Array[(java.lang.reflect.Field, AutoMapping[E, _])] = 
     mappings.map { f =>
       f -> f.get(this).asInstanceOf[AutoMapping[E, _]]
     }

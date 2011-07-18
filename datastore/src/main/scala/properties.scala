@@ -9,17 +9,18 @@ import com.google.appengine.api.blobstore.BlobKey
 
 /* A mapping from a Datastore type to a scala type, with methods to get from/set on an Entity. */
 sealed trait Property[A] {
+  /** The default value for this property. */
   def dflt: A
-  
-  def toStoredType(value: A): Any = value // TODO use implicits
-  
-  def fromStoredType(st: Any) = st.asInstanceOf[A] // TODO use implicits
-  
+  /** Convert a Scala type to its persistable representation. */
+  def toStoredType(value: A): Any = value
+  /** Convert a persistable type to its Scala representation. */
+  def fromStoredType(st: Any) = st.asInstanceOf[A]
+  /** Get a mapped property value from a raw Entity. */
   def get(e: Entity, name: String) = e.getProperty(name) match {
     case null => dflt
     case raw => fromStoredType(raw)
   }
-  
+  /** Set a mapped property value on a raw Entity. */
   def set(e: Entity, name: String, value: A) = {
     e.setProperty(name, toStoredType(value))
     e
