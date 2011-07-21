@@ -29,11 +29,10 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   def orderDesc(f: K => PropertyMapping[E, _]) =
     copy(sorts = Desc(f(kind)) :: sorts)
   
-  /**
-   * Generate a raw GQL query as a string. This requires an active API
-   * environment registered on the current thread.
-   */
-  def toGQLString() = rawQuery.toString
+  override def toString =
+    "SELECT * FROM " + kind.name + " WHERE " +
+      filters.reverse.mkString(" AND ") +
+      (if (sorts == Nil) "" else " " + sorts.reverse.mkString(","))
   
   /** Fetch a single record matching this query. */
   def fetchOne()(implicit dss: DatastoreService) = 

@@ -8,6 +8,7 @@ import com.google.appengine.api.datastore.{
 import com.google.appengine.api.blobstore.BlobKey
 
 /* A mapping from a Datastore type to a scala type, with methods to get from/set on an Entity. */
+@annotation.implicitNotFound(msg = "Property instance not found for ${A}!")
 sealed trait Property[A] {
   /** The default value for this property. */
   def dflt: A

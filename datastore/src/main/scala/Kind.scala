@@ -15,16 +15,17 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   extends PropertyImplicits {
   
   val reflector = new poso.Reflector[E]
+  val name = reflector.simpleName
   private lazy val ctor = findConstructor
   
-  def keyFor(id: Long) = KeyFactory.createKey(reflector.simpleName, id)
+  def keyFor(id: Long) = KeyFactory.createKey(name, id)
   
-  def childOf(ancestor: Key): Key = new GEntity(reflector.simpleName, ancestor).getKey
+  def childOf(ancestor: Key): Key = new GEntity(name, ancestor).getKey
   
   private def entityKey(e: E) = e.key //TODO generalize
   
   def put(e: E)(implicit dss: DatastoreService) = {
-    val entity = entityKey(e).map(new GEntity(_)).getOrElse(new GEntity(reflector.simpleName))
+    val entity = entityKey(e).map(new GEntity(_)).getOrElse(new GEntity(name))
     
     val key = dss.put(identityIdx.foldLeft(entity) {
       case (ge, (_, pm)) => putProperty(pm, e, ge)
