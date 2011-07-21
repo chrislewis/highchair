@@ -1,58 +1,49 @@
 package highchair.datastore
 
 import highchair.tests._
-import org.specs._
-import java.util.Date
+import org.specs2.mutable._
 
-class EntitySpec extends highchair.specs.DataStoreSpec {
-  
-  doBeforeSpec {
-    super.doBeforeSpec()
-    Person.testSet foreach Person.put
-  }
-  
-  "People queries" should {
-    "find 3 people by last name" in {
-      (Person where(_.lastName is "Lewis") fetch() size) must_== 3
-    }    
-    "find 1 person when limited" in {
-      (Person where(_.lastName is "Lewis") fetch(limit = 1) size) must_== 1
+class EntitySpec extends Specification {
+  "Person kind" should {
+    "build a query for people by last name" in {
+      (Person where(_.lastName is "Lewis") toString) must_==
+      "SELECT * FROM Person WHERE lastName = Lewis"
     }
-    "find 1 by first and last name" in {
+    
+    "build a query for people by first and last name" in {
       (Person where(_.lastName is "Lewis")
-        and (_.firstName is "Chris") fetch() size) must_== 1
+        and (_.firstName is "Chris") toString) must_==
+      "SELECT * FROM Person WHERE lastName = Lewis AND firstName = Chris"
     }
-    "find 1 by last, first, and middle names" in {
+    
+    "build a query for people by last, first, and middle names" in {
       (Person where(_.lastName is "Lewis")
         and (_.firstName is "Chris")
-        and (_.middleName is Some("Aaron")) fetch() size) must_== 1
+        and (_.middleName is Some("Aaron")) toString) must_==
+        "SELECT * FROM Person WHERE lastName = Lewis AND firstName = Chris AND middleName = Some(Aaron)"
     }
-    "find 0 Lewises under 20" in {
+    
+    "build a query for people under 20 by last name" in {
       (Person where(_.lastName is "Lewis")
-        and (_.age < 20) fetch()) must beEmpty
+        and (_.age < 20) toString) must_==
+        "SELECT * FROM Person WHERE lastName = Lewis AND age < 20"
     }
-    "find 1 Lewis over 40" in {
-      val over40 = (Person where(_.lastName is "Lewis")
-        and (_.age > 40) fetch())
-      over40.size must_== 1
-      over40.headOption.flatMap(_ middleName) must_== Some("Donald")
+    
+    "build a query for people over 40 by last name" in {
+      (Person where(_.lastName is "Lewis")
+        and (_.age > 40) toString) must_==
+        "SELECT * FROM Person WHERE lastName = Lewis AND age > 40"
     }
-    "sort ascending by age" in {
-      val ascAges = Person where (_.age > 20) orderAsc (_.age) fetch() map(_.age)
-      ascAges must_== List(29, 31, 60)
+    
+    "build a query for people under 20 in ascending order by age" in {
+      (Person where (_.age > 20) orderAsc (_.age) toString) must_==
+      "SELECT * FROM Person WHERE age > 20 ORDER BY age ASC"
     }
-    "sort descending by age" in {
-      val descAges = Person where (_.age > 20) orderDesc (_.age) fetch() map(_.age)
-      descAges must_== List(60, 31, 29)
-    }
-    "find 0 Joneses" in {
-      Person where (_.lastName is "Jones") fetch() must beEmpty
-    }
-    "fetch all" in {
-      (Person fetch() size) must_== 3
-    }
-    "fetch all with limit 2" in {
-      (Person fetch(limit = 2) size) must_== 2
+    
+    "build a query for people under 20 in descending order by age" in {
+      (Person where (_.age > 20) orderDesc (_.age) toString) must_==
+      "SELECT * FROM Person WHERE age > 20 ORDER BY age DESC"
     }
   }
+  
 }
