@@ -48,10 +48,10 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   
   /**/
   def where[A](f: this.type => meta.Filter[E, A]) =
-    Query[E, this.type](this, f(this) :: Nil, Nil)
+    Query[E, this.type](this, f(this) :: Nil)
   
   implicit def kind2Query[K <: Kind[E]](k: K) =
-    Query[E, this.type](this, Nil, Nil)
+    Query[E, this.type](this)
   /**/
   
   private def putProperty[A : Manifest](pm: PropertyMapping[E, _], e: E, ge: GEntity) = {

@@ -2,14 +2,14 @@ import sbt._
 import Keys._
 
 object HighchairBuild extends Build {
-  lazy val root = Project("root", file("."), settings = Common.settings)
+  lazy val root = Project("highchair", file("."), settings = Common.settings)
     .aggregate(datastore, spec, remote, util)
   lazy val datastore = Project("highchair-datastore", file("datastore"),
     settings = Common.settings ++ Seq(
       name := "Highchair Datastore",
       libraryDependencies += "joda-time" % "joda-time" % "1.6.2"
     )
-  ) dependsOn(util, spec)
+  ) dependsOn(spec % "test")
   lazy val spec = Project("highchair-spec", file("spec"),
     settings = Common.settings ++
       Seq(
@@ -68,6 +68,8 @@ object Common {
     crossScalaVersions := Seq("2.8.1", "2.9.0-1"),
     scalacOptions += "-deprecation",
     libraryDependencies <<= scalaVersion(v => GAE.dependencies ++ specs2Dep("test") :+ specsDep(v)("test")),
-    resolvers := Seq(ScalaToolsSnapshots)
+    resolvers := Seq(ScalaToolsSnapshots),
+    publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"),
+    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
   )
 }

@@ -10,6 +10,16 @@ class EntitySpec extends Specification {
       "SELECT * FROM Person WHERE lastName = Lewis"
     }
     
+    "build a query for one person by last name" in {
+      (Person where(_.lastName is "Lewis") limit 1 toString) must_==
+      "SELECT * FROM Person WHERE lastName = Lewis LIMIT 1 OFFSET 0"
+    }
+    
+    "build a query for people by last name skipping the first 10" in {
+      (Person where(_.lastName is "Lewis") offset 10 toString) must_==
+      "SELECT * FROM Person WHERE lastName = Lewis LIMIT 500 OFFSET 10"
+    }
+    
     "build a query for people by first and last name" in {
       (Person where(_.lastName is "Lewis")
         and (_.firstName is "Chris") toString) must_==
