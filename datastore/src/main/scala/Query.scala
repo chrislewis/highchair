@@ -23,10 +23,14 @@ case class Query[E <: Entity[E], K <: Kind[E]](
   def and(f: K => Filter[E, _]) =
     copy(filters = f(kind) :: filters)
   
+  /** Set a limit on the number of entities to fetch. */
   def limit(l: Int) =
-    copy(fetchOptions = initFetch(_.copy(limit = l)))
+    updateFetch(_.copy(limit = l))
+  /** Set on offset in the set of fetched entites to return. */
   def offset(o: Int) =
-    copy(fetchOptions = initFetch(_.copy(skip = o)))
+    updateFetch(_.copy(skip = o))
+  def updateFetch(f: Fetch => Fetch) =
+    copy(fetchOptions = initFetch(f))
   
   // clearly this is general..
   def init[A](init: Option[A])(zero: => A)(f: A => A) =
@@ -68,7 +72,7 @@ case class Query[E <: Entity[E], K <: Kind[E]](
     asIterable(iterable).map(kind.entity2Object)
   }
     
-  override def toString = //TODO don't override - TODO fetchopts
+  override def toString =
     "SELECT * FROM " + kind.name + " WHERE " +
       filters.reverse.mkString(" AND ") +
       (if (sorts == Nil) "" else " " + sorts.reverse.mkString(",")) +

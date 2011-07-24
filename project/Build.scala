@@ -68,6 +68,7 @@ object Common {
     crossScalaVersions := Seq("2.8.1", "2.9.0-1"),
     scalacOptions += "-deprecation",
     libraryDependencies <<= scalaVersion(v => GAE.dependencies ++ specs2Dep("test") :+ specsDep(v)("test")),
+    parallelExecution in Test := false,
     resolvers := Seq(ScalaToolsSnapshots),
     publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"),
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
