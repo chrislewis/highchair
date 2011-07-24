@@ -68,7 +68,7 @@ abstract class Kind[E <: Entity[E]](implicit m: Manifest[E])
   
   /* Function which, given a type A, will yield an appropriate Property instance via an implicit. */
   def property[A](name: String)(implicit p: Property[A], m: Manifest[A]) =
-    new AutoMapping[E, A](this, p, m.erasure)
+    new AutoMapping[E, A](this, p, m.erasure, Some(name))
   
   def property[A](implicit p: Property[A], m: Manifest[A]) =
     new AutoMapping[E, A](this, p, m.erasure)
