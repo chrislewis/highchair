@@ -62,6 +62,7 @@ object Common {
     "org.specs2" %% "specs2-scalaz-core" % "5.1-SNAPSHOT" % cfg)
   
   val settings = Defaults.defaultSettings ++ Seq(
+    organization := "net.thegodcode",
     name := "Highchair",
     version := "0.0.5-SNAPSHOT",
     scalaVersion := "2.8.1",
@@ -70,7 +71,13 @@ object Common {
     libraryDependencies <<= scalaVersion(v => GAE.dependencies ++ specs2Dep("test") :+ specsDep(v)("test")),
     parallelExecution in Test := false,
     resolvers := Seq(ScalaToolsSnapshots),
-    publishTo := Some("Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"),
+    publishTo <<= (version) { version: String =>
+      val nexus = "http://nexus.scala-tools.org/content/repositories/"
+      if (version.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus+"snapshots/") 
+      else
+        Some("releases" at nexus+"releases/")
+    },
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
   )
 }
