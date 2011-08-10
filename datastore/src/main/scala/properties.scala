@@ -9,7 +9,7 @@ import com.google.appengine.api.blobstore.BlobKey
 
 /* A mapping from a Datastore type to a scala type, with methods to get from/set on an Entity. */
 @annotation.implicitNotFound(msg = "Property instance not found for ${A}!")
-sealed trait Property[A] {
+trait Property[A] {
   /** The default value for this property. */
   def dflt: A
   /** Convert a Scala type to its persistable representation. */
@@ -28,7 +28,7 @@ sealed trait Property[A] {
   }
 }
 
-sealed abstract class BaseProperty[A](_dflt: => A) extends Property[A] {
+abstract class BaseProperty[A](_dflt: => A) extends Property[A] {
   def dflt = _dflt
 }
 
